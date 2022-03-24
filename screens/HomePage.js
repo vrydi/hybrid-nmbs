@@ -25,6 +25,8 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Button } from "react-native-paper";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import format from "date-fns/format";
 
 export function HomePage() {
   const { stationStringList } = useStationsContext();
@@ -36,10 +38,12 @@ export function HomePage() {
     defaultValues: {
       departure: "",
       arrival: "",
+      date: new Date(),
     },
   });
   const onSubmit = (data) => console.log(data);
 
+  const [openDatePicker, setOpenDatePicker] = useState(false);
   const items = stationStringList.map((station) => ({
     label: station,
     value: station,
@@ -131,9 +135,33 @@ export function HomePage() {
           )}
           name="arrival"
         />
-        <Button title="submit" onPress={handleSubmit(onSubmit)}>
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Button onPress={() => setOpenDatePicker(true)}>
+              <Text>Date: {format(value, "dd-MM-yyyy")}</Text>
+              {openDatePicker && (
+                <RNDateTimePicker
+                  onChange={(res) => {
+                    setOpenDatePicker(false);
+                    onChange(new Date(res.nativeEvent.timestamp));
+                  }}
+                  value={value}
+                  minimumDate={new Date()}
+                  mode={"date"}
+                />
+              )}
+            </Button>
+          )}
+          name="date"
+        />
+
+        <TouchableOpacity title="submit" onPress={handleSubmit(onSubmit)}>
           <Text>Vind me een trein</Text>
-        </Button>
+        </TouchableOpacity>
       </View>
     </Pressable>
   );
