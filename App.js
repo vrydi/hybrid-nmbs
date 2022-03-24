@@ -6,7 +6,7 @@ import { HomePage } from "./screens/HomePage";
 import { Icon } from "react-native-elements";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { NAV_ELEMENTS } from "./data/NavigationConstants";
-import { nmbsBlue } from "./data/styles";
+import { nmbsBlueDark } from "./data/styles";
 
 function HomeScreen() {
   return (
@@ -30,7 +30,7 @@ export default function App() {
   return (
     <NavigationContainer>
       {/* tabBar={(props) => <CustomTabBar {...props} />} */}
-      <Tab.Navigator barStyle={{ backgroundColor: nmbsBlue }}>
+      <Tab.Navigator barStyle={{ backgroundColor: nmbsBlueDark }}>
         {NAV_ELEMENTS.map((nav, i) => (
           <Tab.Screen
             key={i}
