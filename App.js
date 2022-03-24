@@ -3,6 +3,10 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomePage } from "./screens/HomePage";
+import { Icon } from "react-native-elements";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { NAV_ELEMENTS } from "./data/NavigationConstants";
+import { nmbsBlue } from "./data/styles";
 
 function HomeScreen() {
   return (
@@ -20,67 +24,45 @@ function SettingsScreen() {
   );
 }
 
-function CustomTabBar({ state, descriptors, navigation }) {
-  return (
-    <View style={{ flexDirection: "row" }}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-
-        const isFocused = state.index === index;
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: "tabPress",
-            target: route.key,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-
-        const onLongPress = () => {
-          navigation.emit({
-            type: "tabLongPress",
-            target: route.key,
-          });
-        };
-
-        return (
-          <TouchableOpacity
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            style={{ flex: 1 }}
-          >
-            <Text style={{ color: isFocused ? "#673ab7" : "#222" }}>
-              {label}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
-
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
-        <Tab.Screen name="Home" component={HomePage} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+      {/* tabBar={(props) => <CustomTabBar {...props} />} */}
+      <Tab.Navigator barStyle={{ backgroundColor: nmbsBlue }}>
+        {NAV_ELEMENTS.map((nav, i) => (
+          <Tab.Screen
+            key={i}
+            name={nav.name}
+            component={nav.component}
+            options={{
+              tabBarLabel: nav.name.toUpperCase(),
+              tabBarIcon: () => <Icon name={nav.icon} color={nav.color} />,
+            }}
+          />
+        ))}
+        <Tab.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            tabBarIcon: ({ color }) => <Icon name="settings" color={color} />,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
+  );
+}
+
+function TabBarPage(props) {
+  const { nav } = props;
+  return (
+    <Tab.Screen
+      name={nav.name}
+      component={nav.component}
+      options={{
+        tabBarIcon: ({ color }) => <Icon name={nav.icon} color={nav.color} />,
+      }}
+    />
   );
 }
