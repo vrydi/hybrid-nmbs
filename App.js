@@ -7,14 +7,7 @@ import { Icon } from "react-native-elements";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { NAV_ELEMENTS } from "./data/NavigationConstants";
 import { nmbsBlueDark } from "./data/styles";
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
+import { StationProvider } from "./contexts/StationContext";
 
 function SettingsScreen() {
   return (
@@ -27,6 +20,14 @@ function SettingsScreen() {
 const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
+  return (
+    <StationProvider>
+      <ProvidedApp />
+    </StationProvider>
+  );
+}
+
+function ProvidedApp() {
   return (
     <NavigationContainer>
       {/* tabBar={(props) => <CustomTabBar {...props} />} */}
@@ -51,18 +52,5 @@ export default function App() {
         />
       </Tab.Navigator>
     </NavigationContainer>
-  );
-}
-
-function TabBarPage(props) {
-  const { nav } = props;
-  return (
-    <Tab.Screen
-      name={nav.name}
-      component={nav.component}
-      options={{
-        tabBarIcon: ({ color }) => <Icon name={nav.icon} color={nav.color} />,
-      }}
-    />
   );
 }

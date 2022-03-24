@@ -1,8 +1,10 @@
 import { View, Text, Image } from "react-native";
 import { fullContainer, image, title } from "../data/styles";
 import tw from "twrnc";
+import { useStationsContext } from "../contexts/StationContext";
 
 export function HomePage() {
+  const { stationStringList } = useStationsContext();
   return (
     <View style={fullContainer}>
       <View style={tw`w-full max-h-60`}>
