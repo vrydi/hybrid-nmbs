@@ -6,6 +6,7 @@ import {
   FlatList,
   Keyboard,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import {
   fullContainer,
@@ -23,6 +24,7 @@ import { useStationsContext } from "../contexts/StationContext";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Button } from "react-native-paper";
 
 export function HomePage() {
   const { stationStringList } = useStationsContext();
@@ -32,8 +34,8 @@ export function HomePage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      departure: "",
+      arrival: "",
     },
   });
   const onSubmit = (data) => console.log(data);
@@ -81,6 +83,7 @@ export function HomePage() {
                 }}
                 searchable={true}
                 setValue={onChange}
+                onChangeValue={onChange}
                 setOpen={() => setFocusField("departure")}
                 closeAfterSelecting={true}
                 items={items}
@@ -113,6 +116,7 @@ export function HomePage() {
                 }}
                 searchable={true}
                 setValue={onChange}
+                onChangeValue={onChange}
                 setOpen={() => setFocusField("arrival")}
                 closeAfterSelecting={true}
                 items={items}
@@ -127,6 +131,9 @@ export function HomePage() {
           )}
           name="arrival"
         />
+        <Button title="submit" onPress={handleSubmit(onSubmit)}>
+          <Text>Vind me een trein</Text>
+        </Button>
       </View>
     </Pressable>
   );
