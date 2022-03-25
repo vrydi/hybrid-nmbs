@@ -41,8 +41,12 @@ export function StationProvider(props) {
     loadStations();
   }, [setStationsList]);
 
-  const updateSelectedStationID = (id) => setSelectedStationID(id);
-
+  const updateSelectedStationID = useCallback(
+    (id) => {
+      setSelectedStationID(id);
+    },
+    [selectedStationID]
+  );
   useEffect(() => {
     console.log("use effect set station", selectedStationID);
     if (selectedStationID !== undefined) {

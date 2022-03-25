@@ -75,15 +75,13 @@ export function StationSearchPage() {
 }
 
 function DepartureList() {
-  const { selectedStation, updateSelectedStationData } = useStationsContext();
+  const { selectedStation, selectedStationID, updateSelectedStationData } =
+    useStationsContext();
 
   useEffect(() => {
     const timer = setInterval(() => {
-      console.log("update?");
-      if (selectedStation) {
-        console.log("update");
-        updateSelectedStationData();
-      }
+      console.log("update");
+      updateSelectedStationData();
     }, 30000);
 
     return () => {
