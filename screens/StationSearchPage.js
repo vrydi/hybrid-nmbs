@@ -1,10 +1,16 @@
 import { FlatList, View, Text } from "react-native";
-import { fullContainer, inputDropdownListContainer } from "../data/styles";
+import {
+  flexBox,
+  fullContainer,
+  inputDropdownListContainer,
+  title,
+} from "../data/styles";
 import tw from "twrnc";
 import { useStationsContext } from "../contexts/StationContext";
 import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import format from "date-fns/format";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export function StationSearchPage() {
@@ -69,22 +75,33 @@ export function StationSearchPage() {
 }
 
 function DepartureList() {
-  const { selectedStation } = useStationsContext();
-  //   console.log("station", selectedStation);
-  if (selectedStation) {
-    // console.log("departures", selectedStation.departures);
-    selectedStation.departures.departure.map((departure) =>
-      console.log("departure", departure)
-    );
-  }
+  const { selectedStation, updateSelectedStationData } = useStationsContext();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log("update?");
+      if (selectedStation) {
+        console.log("update");
+        updateSelectedStationData();
+      }
+    }, 30000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
   return (
     <View>
       {selectedStation && (
-        <FlatList
-          data={selectedStation.departures.departure}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <DepartureListElement departure={item} />}
-        />
+        <>
+          <Text style={title}>{selectedStation.station}</Text>
+          <FlatList
+            data={selectedStation.departures.departure}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <DepartureListElement departure={item} />}
+          />
+        </>
       )}
     </View>
   );
@@ -92,10 +109,16 @@ function DepartureList() {
 
 function DepartureListElement(props) {
   const { departure } = props;
-  console.log("departureEl", departure);
+
+  const d = new Date(0);
+  d.setSeconds(departure.time);
   return (
-    <View>
+    <View style={flexBox}>
       <Text>{departure.station}</Text>
+      <View style={tw`flex w-1/5 flex-row justify-between`}>
+        <Text>{d.toLocaleTimeString().slice(0, 5)}</Text>
+        <Text>{departure.delay > 0 ? `+${departure.delay / 60}` : ""}</Text>
+      </View>
     </View>
   );
 }

@@ -44,18 +44,20 @@ export function StationProvider(props) {
   const updateSelectedStationID = (id) => setSelectedStationID(id);
 
   useEffect(() => {
-    const dataFetch = async () => {
-      console.log("fetching station");
-      const data = await fetchJson(
-        "https://api.irail.be/liveboard/?format=json&id=" + selectedStationID
-      );
-      setSelectedStation(data);
-    };
     console.log("use effect set station", selectedStationID);
     if (selectedStationID !== undefined) {
-      dataFetch();
+      updateSelectedStationData();
     }
   }, [selectedStationID]);
+
+  const updateSelectedStationData = async () => {
+    console.log("fetching station");
+    const data = await fetchJson(
+      "https://api.irail.be/liveboard/?lang=nl&format=json&id=" +
+        selectedStationID
+    );
+    setSelectedStation(data);
+  };
 
   const api = useMemo(
     () => ({
@@ -63,8 +65,15 @@ export function StationProvider(props) {
       stationStringList,
       updateSelectedStationID,
       selectedStation,
+      updateSelectedStationData,
     }),
-    [stationsList, stationStringList, updateSelectedStationID, selectedStation]
+    [
+      stationsList,
+      stationStringList,
+      updateSelectedStationID,
+      selectedStation,
+      updateSelectedStationData,
+    ]
   );
 
   return (
