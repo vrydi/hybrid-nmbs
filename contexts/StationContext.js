@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { forbiddenStations } from "../data/data";
 import { fetchJson } from "./fetch";
 
@@ -7,7 +14,8 @@ const StationsContext = createContext();
 export function StationProvider(props) {
   const [stationStringList, setStationStringList] = useState([]);
   const [stationsList, setStationsList] = useState([]);
-  const [selectedStationID, setSelectedStationID] = useState("");
+  const [selectedStationID, setSelectedStationID] = useState();
+  const [selectedStation, setSelectedStation] = useState();
 
   useEffect(() => {
     console.log("useEffect");
@@ -35,10 +43,18 @@ export function StationProvider(props) {
 
   const updateSelectedStationID = (id) => setSelectedStationID(id);
 
-  const selectedStation = useMemo(async () => {
-    await fetchJson(
-      "https://api.irail.be/liveboard/?format=json&id=" + selectedStationID
-    );
+  useEffect(() => {
+    const dataFetch = async () => {
+      console.log("fetching station");
+      const data = await fetchJson(
+        "https://api.irail.be/liveboard/?format=json&id=" + selectedStationID
+      );
+      setSelectedStation(data);
+    };
+    console.log("use effect set station", selectedStationID);
+    if (selectedStationID !== undefined) {
+      dataFetch();
+    }
   }, [selectedStationID]);
 
   const api = useMemo(
@@ -46,8 +62,9 @@ export function StationProvider(props) {
       stationsList,
       stationStringList,
       updateSelectedStationID,
+      selectedStation,
     }),
-    [stationsList, stationStringList, updateSelectedStationID]
+    [stationsList, stationStringList, updateSelectedStationID, selectedStation]
   );
 
   return (

@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { FlatList, View, Text } from "react-native";
 import { fullContainer, inputDropdownListContainer } from "../data/styles";
 import tw from "twrnc";
 import { useStationsContext } from "../contexts/StationContext";
@@ -24,8 +24,8 @@ export function StationSearchPage() {
     },
   });
   const onSubmit = (data) => {
-    console.log(data);
-    updateSelectedStationID(data);
+    console.log("submit", data);
+    if (data !== "") updateSelectedStationID(data);
   };
   return (
     <SafeAreaView style={fullContainer}>
@@ -62,7 +62,40 @@ export function StationSearchPage() {
           )}
           name="station"
         />
+        <DepartureList />
       </View>
     </SafeAreaView>
+  );
+}
+
+function DepartureList() {
+  const { selectedStation } = useStationsContext();
+  //   console.log("station", selectedStation);
+  if (selectedStation) {
+    // console.log("departures", selectedStation.departures);
+    selectedStation.departures.departure.map((departure) =>
+      console.log("departure", departure)
+    );
+  }
+  return (
+    <View>
+      {selectedStation && (
+        <FlatList
+          data={selectedStation.departures.departure}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <DepartureListElement departure={item} />}
+        />
+      )}
+    </View>
+  );
+}
+
+function DepartureListElement(props) {
+  const { departure } = props;
+  console.log("departureEl", departure);
+  return (
+    <View>
+      <Text>{departure.station}</Text>
+    </View>
   );
 }
