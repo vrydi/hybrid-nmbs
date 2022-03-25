@@ -9,14 +9,6 @@ import { NAV_ELEMENTS } from "./data/NavigationConstants";
 import { nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
 
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
 const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
@@ -30,7 +22,6 @@ export default function App() {
 function ProvidedApp() {
   return (
     <NavigationContainer>
-      {/* tabBar={(props) => <CustomTabBar {...props} />} */}
       <Tab.Navigator barStyle={{ backgroundColor: nmbsBlueDark }}>
         {NAV_ELEMENTS.map((nav, i) => (
           <Tab.Screen
@@ -43,13 +34,6 @@ function ProvidedApp() {
             }}
           />
         ))}
-        <Tab.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{
-            tabBarIcon: ({ color }) => <Icon name="settings" color={color} />,
-          }}
-        />
       </Tab.Navigator>
     </NavigationContainer>
   );

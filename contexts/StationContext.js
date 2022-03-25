@@ -6,6 +6,7 @@ const StationsContext = createContext();
 export function StationProvider(props) {
   const [stationStringList, setStationStringList] = useState([]);
   const [stationsList, setStationsList] = useState([]);
+  const [selectedStationSearch, setSelectedStationSearch] = useState({});
 
   useEffect(() => {
     console.log("useEffect");
@@ -24,12 +25,39 @@ export function StationProvider(props) {
     }
     loadStations();
   }, [setStationsList]);
+
+  const setSelectedStationSearchFromString = async (station) => {
+    if (station === "") return;
+    const id = getStationIdFromString(station);
+    console.log(id);
+    const fetched = await fetchJson(
+      "https://api.irail.be/liveboard/?lang=nl&format=json&id=" + id
+    );
+    console.log(fetched);
+    setSelectedStationSearch(fetched);
+  };
+
+  const getStationIdFromString = (string) => {
+    const filtered = stationsList.filter(
+      (station) => station.standardname === string
+    );
+    if (filtered.length === 0) return null;
+    return filtered[0].id;
+  };
+
   const api = useMemo(
     () => ({
       stationsList,
       stationStringList,
+      setSelectedStationSearchFromString,
+      selectedStationSearch,
     }),
-    [stationsList, stationStringList]
+    [
+      stationsList,
+      stationStringList,
+      setSelectedStationSearchFromString,
+      selectedStationSearch,
+    ]
   );
 
   return (
