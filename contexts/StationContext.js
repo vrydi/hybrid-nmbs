@@ -6,7 +6,7 @@ const StationsContext = createContext();
 export function StationProvider(props) {
   const [stationStringList, setStationStringList] = useState([]);
   const [stationsList, setStationsList] = useState([]);
-  const [selectedStationSearch, setSelectedStationSearch] = useState({});
+  const [selectedStationID, setSelectedStationID] = useState("");
 
   useEffect(() => {
     console.log("useEffect");
@@ -18,7 +18,10 @@ export function StationProvider(props) {
       const newStringList = [];
       temp.station.forEach((station) => {
         newList.push(station);
-        newStringList.push(station.standardname);
+        newStringList.push({
+          name: station.name,
+          id: station.id,
+        });
       });
       setStationsList(newList);
       setStationStringList(newStringList);
@@ -26,38 +29,21 @@ export function StationProvider(props) {
     loadStations();
   }, [setStationsList]);
 
-  const setSelectedStationSearchFromString = async (station) => {
-    if (station === "") return;
-    const id = getStationIdFromString(station);
-    console.log(id);
-    const fetched = await fetchJson(
-      "https://api.irail.be/liveboard/?lang=nl&format=json&id=" + id
-    );
-    console.log(fetched);
-    setSelectedStationSearch(fetched);
-  };
+  const updateSelectedStationID = (id) => setSelectedStationID(id);
 
-  const getStationIdFromString = (string) => {
-    const filtered = stationsList.filter(
-      (station) => station.standardname === string
+  const selectedStation = useMemo(async () => {
+    await fetchJson(
+      "https://api.irail.be/liveboard/?format=json&id=" + selectedStationID
     );
-    if (filtered.length === 0) return null;
-    return filtered[0].id;
-  };
+  }, [selectedStationID]);
 
   const api = useMemo(
     () => ({
       stationsList,
       stationStringList,
-      setSelectedStationSearchFromString,
-      selectedStationSearch,
+      updateSelectedStationID,
     }),
-    [
-      stationsList,
-      stationStringList,
-      setSelectedStationSearchFromString,
-      selectedStationSearch,
-    ]
+    [stationsList, stationStringList, updateSelectedStationID]
   );
 
   return (

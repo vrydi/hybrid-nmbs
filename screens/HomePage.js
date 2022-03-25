@@ -46,8 +46,8 @@ export function HomePage() {
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [openTimePicker, setOpenTimePicker] = useState(false);
   const items = stationStringList.map((station) => ({
-    label: station,
-    value: station,
+    label: station.name,
+    value: station.id,
   }));
 
   const [focusedField, setFocusField] = useState("");

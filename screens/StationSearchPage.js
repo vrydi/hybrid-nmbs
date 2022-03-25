@@ -8,12 +8,11 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export function StationSearchPage() {
-  const { stationStringList, setSelectedStationSearchFromString } =
-    useStationsContext();
+  const { stationStringList, updateSelectedStationID } = useStationsContext();
   const [open, setOpen] = useState(false);
   const items = stationStringList.map((station) => ({
-    label: station,
-    value: station,
+    label: station.name,
+    value: station.id,
   }));
   const {
     control,
@@ -26,7 +25,7 @@ export function StationSearchPage() {
   });
   const onSubmit = (data) => {
     console.log(data);
-    setSelectedStationSearchFromString(data);
+    updateSelectedStationID(data);
   };
   return (
     <SafeAreaView style={fullContainer}>
