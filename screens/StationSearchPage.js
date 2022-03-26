@@ -31,7 +31,7 @@ export function StationSearchPage() {
   });
   const onSubmit = (data) => {
     console.log("submit", data);
-    if (data !== "") updateSelectedStationID(data);
+    if (data !== "" && data !== undefined) updateSelectedStationID(data);
   };
   return (
     <SafeAreaView style={fullContainer}>

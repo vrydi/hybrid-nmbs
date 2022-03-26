@@ -34,8 +34,12 @@ export function StationProvider(props) {
           });
         }
       });
-      setStationsList(newList);
-      setStationStringList(newStringList);
+      setStationsList(
+        newList.sort((a, b) => a.standardname.localeCompare(b.standardname))
+      );
+      setStationStringList(
+        newStringList.sort((a, b) => a.name.localeCompare(b.name))
+      );
     }
     loadStations();
   }, [setStationsList]);
