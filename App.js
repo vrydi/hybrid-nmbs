@@ -1,15 +1,28 @@
 import * as React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  MaskedViewBase,
+  Pressable,
+} from "react-native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomePage } from "./screens/HomePage";
 import { Icon } from "react-native-elements";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { NAV_ELEMENTS } from "./data/NavigationConstants";
-import { nmbsBlueDark } from "./data/styles";
+import {
+  NAV_ELEMENTS,
+  NAV_HOME,
+  NAV_STATION_SEARCH,
+} from "./data/NavigationConstants";
+import tw from "twrnc";
+import { flexBox, flexColumn, navBar, nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Tab = createMaterialBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
@@ -22,19 +35,36 @@ export default function App() {
 function ProvidedApp() {
   return (
     <NavigationContainer>
-      <Tab.Navigator barStyle={{ backgroundColor: nmbsBlueDark }}>
-        {NAV_ELEMENTS.map((nav, i) => (
-          <Tab.Screen
-            key={i}
-            name={nav.name}
-            component={nav.component}
-            options={{
-              tabBarLabel: nav.name.toUpperCase(),
-              tabBarIcon: () => <Icon name={nav.icon} color={nav.color} />,
-            }}
-          />
-        ))}
-      </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          name={NAV_HOME.name}
+          component={Navigation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={NAV_STATION_SEARCH.name}
+          component={Navigation}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+function Navigation() {
+  return (
+    <Tab.Navigator barStyle={{ backgroundColor: nmbsBlueDark }}>
+      {NAV_ELEMENTS.map((nav, i) => (
+        <Tab.Screen
+          key={i}
+          name={nav.name}
+          component={nav.component}
+          options={{
+            tabBarLabel: nav.name.toUpperCase(),
+            tabBarIcon: () => <Icon name={nav.icon} color={nav.color} />,
+          }}
+        />
+      ))}
+    </Tab.Navigator>
   );
 }
