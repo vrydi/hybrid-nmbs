@@ -1,18 +1,21 @@
 import { FlatList, View, Text } from "react-native";
 import {
+  bold,
   flexBox,
   fullContainer,
   inputDropdownListContainer,
   regular,
   title,
+  nmbsBlueLight,
 } from "../data/styles";
 import tw from "twrnc";
 import { useStationsContext } from "../contexts/StationContext";
 import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import format from "date-fns/format";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function StationSearchPage() {
   return (
@@ -89,17 +92,16 @@ function DepartureList() {
   const { selectedStation, selectedStationID, updateSelectedStationData } =
     useStationsContext();
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const timer = setInterval(() => {
       console.log("update");
       if (selectedStationID !== undefined) updateSelectedStationData();
-      // updateSelectedStationData();
     }, 30000);
 
     return () => {
       clearInterval(timer);
     };
-  }, [selectedStationID]);
+  });
 
   return (
     <View>
@@ -123,18 +125,21 @@ function DepartureListElement(props) {
   const d = new Date(0);
   d.setSeconds(departure.time);
   return (
-    <View>
+    <View style={tw`border-b border-[${nmbsBlueLight}] py-3`}>
       <View style={flexBox}>
-        <Text style={regular}>{departure.station}</Text>
+        <Text style={bold}>{departure.station}</Text>
         <View style={tw`flex w-1/5 flex-row justify-between`}>
           <Text style={regular}>{d.toLocaleTimeString().slice(0, 5)}</Text>
-          <Text style={tw`text-red-500`}>
+          <Text style={tw`text-red-400 font-bold`}>
             {departure.delay > 0 ? `+${departure.delay / 60}` : ""}
           </Text>
         </View>
       </View>
       <View style={flexBox}>
-        <Text>Perron: {departure.platform}</Text>
+        <Text style={regular}>Perron: {departure.platform}</Text>
+        <Text style={regular}>
+          {departure.vehicleinfo.type}-{departure.vehicleinfo.number}
+        </Text>
       </View>
     </View>
   );

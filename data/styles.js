@@ -1,5 +1,6 @@
 import tw from "twrnc";
 
+export const nmbsBlueLight = "#3684B8";
 export const nmbsBlue = "#006ab3";
 export const nmbsBlueDark = "#035C97";
 export const fullContainer = tw`h-full bg-[${nmbsBlue}]`;
@@ -10,3 +11,4 @@ export const flexBox = tw`flex flex-row items-center justify-between w-8/9 mx-au
 export const button = tw`px-5 text-white py-3 bg-[${nmbsBlueDark}] rounded-lg`;
 export const buttonText = tw`text-white text-center`;
 export const regular = tw`text-white`;
+export const bold = tw`text-white font-bold text-xl`;
