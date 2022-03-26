@@ -42,12 +42,12 @@ function ProvidedApp() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name={NAV_HOME.name}
+          name={"HomeStack"}
           component={Navigation}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name={NAV_STATION_SEARCH.name}
+          name={"StationSearchStack"}
           component={Navigation}
           options={{ headerShown: false }}
         />

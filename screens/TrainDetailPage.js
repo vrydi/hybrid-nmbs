@@ -1,30 +1,39 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Navigation } from "../App";
 import { useTrainContext } from "../contexts/TrainContext";
+import { useFocusEffect } from "@react-navigation/native";
+import { fullContainer, title } from "../data/styles";
+import tw from "twrnc";
+import { ActivityIndicator } from "react-native-paper";
 
 export function TrainDetailPage() {
-  const { trainData } = useTrainContext();
+  const { trainData, trainComposition, activeTrainID, updateTrainData } =
+    useTrainContext();
 
-  //   const { trainID } = route.params;
+  useFocusEffect(() => {
+    const timer = setInterval(() => {
+      console.log("update");
+      if (activeTrainID !== undefined) updateTrainData();
+    }, 15000);
 
-  // useFocusEffect(() => {
-  //   const timer = setInterval(() => {
-  //     console.log("update");
-  //     if (selectedStationID !== undefined) updateSelectedStationData();
-  //   }, 30000);
-
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // });
+    return () => {
+      clearInterval(timer);
+    };
+  });
 
   return (
-    <View>
+    <View style={fullContainer}>
       {trainData !== undefined ? (
-        <Text>{trainData.vehicle}</Text>
+        <>
+          <Text style={title}>{trainData.vehicle}</Text>
+        </>
       ) : (
-        <Text>Loading</Text>
+        <ActivityIndicator
+          style={tw`absolute top-1/2 left-1/2 right-1/2`}
+          animating={true}
+          size={"large"}
+          color={"white"}
+        />
       )}
     </View>
   );

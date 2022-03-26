@@ -13,6 +13,7 @@ const TrainContext = createContext();
 export function TrainProvider(props) {
   const [trainData, setTrainData] = useState();
   const [activeTrainID, setActiveTrainID] = useState();
+  const [trainComposition, setTrainComposition] = useState();
 
   const updateActiveTrainID = useCallback(
     (id) => {
@@ -24,6 +25,7 @@ export function TrainProvider(props) {
     console.log("use effect set train", activeTrainID);
     if (activeTrainID !== undefined) {
       updateTrainData();
+      getTrainComposition();
     }
   }, [activeTrainID]);
 
@@ -35,9 +37,31 @@ export function TrainProvider(props) {
     setTrainData(data);
   };
 
+  const getTrainComposition = async () => {
+    console.log("fetching train composition", activeTrainID.split(".")[2]);
+    const data = await fetchJson(
+      "https://api.irail.be/composition/?lang=nl&format=json&id=" +
+        activeTrainID.split(".")[2]
+    );
+    if (data === undefined || data.error) return;
+    setTrainComposition(data.composition.segments.segment);
+  };
+
   const api = useMemo(
-    () => ({ trainData, activeTrainID, updateActiveTrainID, updateTrainData }),
-    [trainData, activeTrainID, updateActiveTrainID, updateTrainData]
+    () => ({
+      trainData,
+      activeTrainID,
+      updateActiveTrainID,
+      updateTrainData,
+      trainComposition,
+    }),
+    [
+      trainData,
+      activeTrainID,
+      updateActiveTrainID,
+      updateTrainData,
+      trainComposition,
+    ]
   );
 
   return (

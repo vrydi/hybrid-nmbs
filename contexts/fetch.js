@@ -1,8 +1,8 @@
 export async function fetchJson(link) {
-  try {
-    console.log(link);
-    const raw = await (await fetch(link)).json();
-    // console.log(raw);
-    return raw;
-  } catch (error) {}
+  console.log(link);
+  const response = await fetch(link);
+  if (response.error) return undefined;
+  const raw = await response.json();
+  // console.log(raw);
+  return raw;
 }

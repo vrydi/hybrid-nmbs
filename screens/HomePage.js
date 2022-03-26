@@ -6,7 +6,6 @@ import {
   Pressable,
   TouchableOpacity,
   SafeAreaView,
-  ActivityIndicator,
 } from "react-native";
 import {
   button,
@@ -23,10 +22,8 @@ import { useStationsContext } from "../contexts/StationContext";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
-import { Button } from "react-native-paper";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import format from "date-fns/format";
-import { NavigationBottomBar } from "../App";
 
 export function HomePage() {
   const { stationStringList } = useStationsContext();
