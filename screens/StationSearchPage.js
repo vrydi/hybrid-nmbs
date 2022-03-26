@@ -15,8 +15,9 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useState, useCallback } from "react";
 import format from "date-fns/format";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-web";
+import { PAGE_TRAIN_DETAIL } from "../data/NavigationConstants";
 
 export function StationSearchPage() {
   return (
@@ -122,6 +123,7 @@ function DepartureList() {
 
 function DepartureListElement(props) {
   const { departure } = props;
+  const navigation = useNavigation();
 
   const d = new Date(0);
   d.setSeconds(departure.time);
@@ -133,7 +135,9 @@ function DepartureListElement(props) {
           ? tw`bg-[${nmbsBlueLight}] border-b border-[${nmbsBlueLight}] py-3`
           : tw`border-b border-[${nmbsBlueLight}] py-3`
       }
-      onPress={() => console.log(departure.station)}
+      onPress={() =>
+        navigation.push(PAGE_TRAIN_DETAIL, { trainID: departure.vehicle })
+      }
     >
       <View style={flexBox}>
         <Text style={bold}>{departure.station}</Text>

@@ -15,3 +15,5 @@ export const NAV_STATION_SEARCH = {
 };
 
 export const NAV_ELEMENTS = [NAV_HOME, NAV_STATION_SEARCH];
+
+export const PAGE_TRAIN_DETAIL = "Trein";

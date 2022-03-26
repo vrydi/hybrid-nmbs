@@ -15,11 +15,13 @@ import {
   NAV_ELEMENTS,
   NAV_HOME,
   NAV_STATION_SEARCH,
+  PAGE_TRAIN_DETAIL,
 } from "./data/NavigationConstants";
 import tw from "twrnc";
 import { flexBox, flexColumn, navBar, nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { TrainDetailPage } from "./screens/TrainDetailPage";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -46,6 +48,7 @@ function ProvidedApp() {
           component={Navigation}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name={PAGE_TRAIN_DETAIL} component={TrainDetailPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
