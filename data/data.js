@@ -58,4 +58,5 @@ export const forbiddenStations = [
   "BE.NMBS.008889045",
   "BE.NMBS.008890142",
   "BE.NMBS.008891611",
+  "BE.NMBS.008895125",
 ];

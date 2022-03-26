@@ -3,6 +3,7 @@ import {
   flexBox,
   fullContainer,
   inputDropdownListContainer,
+  regular,
   title,
 } from "../data/styles";
 import tw from "twrnc";
@@ -14,6 +15,15 @@ import format from "date-fns/format";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export function StationSearchPage() {
+  return (
+    <SafeAreaView style={fullContainer}>
+      <DepartureSelectDropdown />
+      <DepartureList />
+    </SafeAreaView>
+  );
+}
+
+function DepartureSelectDropdown() {
   const { stationStringList, updateSelectedStationID } = useStationsContext();
   const [open, setOpen] = useState(false);
   const items = stationStringList.map((station) => ({
@@ -31,67 +41,65 @@ export function StationSearchPage() {
   });
   const onSubmit = (data) => {
     console.log("submit", data);
-    if (data !== "" && data !== undefined) updateSelectedStationID(data);
+    if (data === "") {
+      console.log("empty data");
+    }
+    if (data === undefined) {
+      console.log("undefined data");
+    }
+    if (data !== "") updateSelectedStationID(data);
   };
   return (
-    <SafeAreaView style={fullContainer}>
-      <View style={fullContainer}>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <DropDownPicker
-                containerStyle={inputDropdownListContainer}
-                open={open}
-                value={value}
-                onClose={() => {
-                  onBlur;
-                  setOpen(false);
-                }}
-                searchable={true}
-                setValue={onChange}
-                onChangeValue={(value) => handleSubmit(onSubmit(value))}
-                setOpen={() => setOpen(true)}
-                closeAfterSelecting={true}
-                items={items}
-                maxHeight={400}
-                searchPlaceholder="Zoek en station..."
-                placeholder="Selecteer een station"
-                zIndex={2000}
-                zIndexInverse={2000}
-                dropDownDirection={"BOTTOM"}
-              />
-            </>
-          )}
-          name="station"
-        />
-        <DepartureList />
-      </View>
-    </SafeAreaView>
+    <Controller
+      control={control}
+      rules={{
+        required: true,
+      }}
+      render={({ field: { onChange, onBlur, value } }) => (
+        <>
+          <DropDownPicker
+            containerStyle={inputDropdownListContainer}
+            open={open}
+            value={value}
+            onClose={() => {
+              onBlur;
+              setOpen(false);
+            }}
+            searchable={true}
+            setValue={onChange}
+            onChangeValue={(value) => handleSubmit(onSubmit(value))}
+            setOpen={() => setOpen(true)}
+            closeAfterSelecting={true}
+            items={items}
+            maxHeight={400}
+            searchPlaceholder="Zoek en station..."
+            placeholder="Selecteer een station"
+            zIndex={2000}
+            zIndexInverse={2000}
+            dropDownDirection={"BOTTOM"}
+          />
+        </>
+      )}
+      name="station"
+    />
   );
 }
 
 function DepartureList() {
-  const {
-    selectedStation,
-    updateSelectedStationID,
-    updateSelectedStationData,
-  } = useStationsContext();
+  const { selectedStation, selectedStationID, updateSelectedStationData } =
+    useStationsContext();
 
   useEffect(() => {
     const timer = setInterval(() => {
       console.log("update");
-      updateSelectedStationID(selectedStation.stationinfo.id);
+      if (selectedStationID !== undefined) updateSelectedStationData();
       // updateSelectedStationData();
     }, 30000);
 
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [selectedStationID]);
 
   return (
     <View>
@@ -115,13 +123,18 @@ function DepartureListElement(props) {
   const d = new Date(0);
   d.setSeconds(departure.time);
   return (
-    <View style={flexBox}>
-      <Text>{departure.station}</Text>
-      <View style={tw`flex w-1/5 flex-row justify-between`}>
-        <Text>{d.toLocaleTimeString().slice(0, 5)}</Text>
-        <Text style={tw`text-red-500`}>
-          {departure.delay > 0 ? `+${departure.delay / 60}` : ""}
-        </Text>
+    <View>
+      <View style={flexBox}>
+        <Text style={regular}>{departure.station}</Text>
+        <View style={tw`flex w-1/5 flex-row justify-between`}>
+          <Text style={regular}>{d.toLocaleTimeString().slice(0, 5)}</Text>
+          <Text style={tw`text-red-500`}>
+            {departure.delay > 0 ? `+${departure.delay / 60}` : ""}
+          </Text>
+        </View>
+      </View>
+      <View style={flexBox}>
+        <Text>Perron: {departure.platform}</Text>
       </View>
     </View>
   );

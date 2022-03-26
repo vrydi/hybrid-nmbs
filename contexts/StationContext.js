@@ -23,22 +23,18 @@ export function StationProvider(props) {
       const temp = await fetchJson(
         "https://api.irail.be/stations?lang=nl&format=json"
       );
-      const newList = [];
-      const newStringList = [];
-      temp.station.forEach((station) => {
-        if (!forbiddenStations.includes(station.id)) {
-          newList.push(station);
-          newStringList.push({
-            name: station.name,
-            id: station.id,
-          });
-        }
-      });
       setStationsList(
-        newList.sort((a, b) => a.standardname.localeCompare(b.standardname))
+        temp.station
+          .filter((station) => !forbiddenStations.includes(station.id))
+          .sort((a, b) => a.standardname.localeCompare(b.standardname))
       );
       setStationStringList(
-        newStringList.sort((a, b) => a.name.localeCompare(b.name))
+        temp.station
+          .filter((station) => {
+            if (!forbiddenStations.includes(station.id))
+              return { name: station.name, id: station.id };
+          })
+          .sort((a, b) => a.name.localeCompare(b.name))
       );
     }
     loadStations();
@@ -73,6 +69,7 @@ export function StationProvider(props) {
       updateSelectedStationID,
       selectedStation,
       updateSelectedStationData,
+      selectedStationID,
     }),
     [
       stationsList,
@@ -80,6 +77,7 @@ export function StationProvider(props) {
       updateSelectedStationID,
       selectedStation,
       updateSelectedStationData,
+      selectedStationID,
     ]
   );
 
