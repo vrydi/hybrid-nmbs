@@ -25,7 +25,6 @@ export function StationProvider(props) {
       );
       const newList = [];
       const newStringList = [];
-      const errorList = [];
       temp.station.forEach((station) => {
         if (!forbiddenStations.includes(station.id)) {
           newList.push(station);
@@ -55,7 +54,7 @@ export function StationProvider(props) {
   }, [selectedStationID]);
 
   const updateSelectedStationData = async () => {
-    console.log("fetching station");
+    console.log("fetching station", selectedStationID);
     const data = await fetchJson(
       "https://api.irail.be/liveboard/?lang=nl&format=json&id=" +
         selectedStationID

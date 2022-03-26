@@ -75,13 +75,17 @@ export function StationSearchPage() {
 }
 
 function DepartureList() {
-  const { selectedStation, selectedStationID, updateSelectedStationData } =
-    useStationsContext();
+  const {
+    selectedStation,
+    updateSelectedStationID,
+    updateSelectedStationData,
+  } = useStationsContext();
 
   useEffect(() => {
     const timer = setInterval(() => {
       console.log("update");
-      updateSelectedStationData();
+      updateSelectedStationID(selectedStation.stationinfo.id);
+      // updateSelectedStationData();
     }, 30000);
 
     return () => {
@@ -115,7 +119,9 @@ function DepartureListElement(props) {
       <Text>{departure.station}</Text>
       <View style={tw`flex w-1/5 flex-row justify-between`}>
         <Text>{d.toLocaleTimeString().slice(0, 5)}</Text>
-        <Text>{departure.delay > 0 ? `+${departure.delay / 60}` : ""}</Text>
+        <Text style={tw`text-red-500`}>
+          {departure.delay > 0 ? `+${departure.delay / 60}` : ""}
+        </Text>
       </View>
     </View>
   );
