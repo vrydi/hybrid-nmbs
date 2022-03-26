@@ -1,4 +1,4 @@
-import { FlatList, View, Text } from "react-native";
+import { FlatList, View, Text, Pressable } from "react-native";
 import {
   bold,
   flexBox,
@@ -16,6 +16,7 @@ import { useState, useCallback } from "react";
 import format from "date-fns/format";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native-web";
 
 export function StationSearchPage() {
   return (
@@ -125,7 +126,15 @@ function DepartureListElement(props) {
   const d = new Date(0);
   d.setSeconds(departure.time);
   return (
-    <View style={tw`border-b border-[${nmbsBlueLight}] py-3`}>
+    <Pressable
+      // android_ripple={true}
+      style={({ pressed }) =>
+        pressed
+          ? tw`bg-[${nmbsBlueLight}] border-b border-[${nmbsBlueLight}] py-3`
+          : tw`border-b border-[${nmbsBlueLight}] py-3`
+      }
+      onPress={() => console.log(departure.station)}
+    >
       <View style={flexBox}>
         <Text style={bold}>{departure.station}</Text>
         <View style={tw`flex w-1/5 flex-row justify-between`}>
@@ -141,6 +150,6 @@ function DepartureListElement(props) {
           {departure.vehicleinfo.type}-{departure.vehicleinfo.number}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
