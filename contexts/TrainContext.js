@@ -1,4 +1,12 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
+import { fetchJson } from "./fetch";
 
 const TrainContext = createContext();
 
@@ -8,24 +16,23 @@ export function TrainProvider(props) {
 
   const updateActiveTrainID = useCallback(
     (id) => {
-      setSelectedStationID(id);
+      setActiveTrainID(id);
     },
-    [selectedStationID]
+    [activeTrainID]
   );
   useEffect(() => {
-    console.log("use effect set station", selectedStationID);
-    if (selectedStationID !== undefined) {
-      updateSelectedStationData();
+    console.log("use effect set train", activeTrainID);
+    if (activeTrainID !== undefined) {
+      updateTrainData();
     }
-  }, [selectedStationID]);
+  }, [activeTrainID]);
 
   const updateTrainData = async () => {
-    console.log("fetching station", selectedStationID);
+    console.log("fetching train", activeTrainID);
     const data = await fetchJson(
-      "https://api.irail.be/liveboard/?lang=nl&format=json&id=" +
-        selectedStationID
+      "https://api.irail.be/vehicle/?lang=nl&format=json&id=" + activeTrainID
     );
-    setSelectedStation(data);
+    setTrainData(data);
   };
 
   const api = useMemo(

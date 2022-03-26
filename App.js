@@ -22,6 +22,7 @@ import { flexBox, flexColumn, navBar, nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TrainDetailPage } from "./screens/TrainDetailPage";
+import { TrainProvider } from "./contexts/TrainContext";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,7 +30,9 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <StationProvider>
-      <ProvidedApp />
+      <TrainProvider>
+        <ProvidedApp />
+      </TrainProvider>
     </StationProvider>
   );
 }
