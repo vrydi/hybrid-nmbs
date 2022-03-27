@@ -1,28 +1,14 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  MaskedViewBase,
-  Pressable,
-} from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomePage } from "./screens/HomePage";
 import { Icon } from "react-native-elements";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import {
-  NAV_ELEMENTS,
-  NAV_HOME,
-  NAV_STATION_SEARCH,
-  PAGE_TRAIN_DETAIL,
-} from "./data/NavigationConstants";
-import tw from "twrnc";
-import { flexBox, flexColumn, navBar, nmbsBlueDark } from "./data/styles";
+import { NAV_ELEMENTS, PAGE_TRAIN_DETAIL } from "./data/NavigationConstants";
+import { nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TrainDetailPage } from "./screens/TrainDetailPage";
 import { TrainProvider, useTrainContext } from "./contexts/TrainContext";
+import { STRIPE_PUBLISHABLE_KEY } from "@env";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
