@@ -9,17 +9,20 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TrainDetailPage } from "./screens/TrainDetailPage";
 import { TrainProvider, useTrainContext } from "./contexts/TrainContext";
 import { STRIPE_PUBLISHABLE_KEY } from "@env";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <StationProvider>
-      <TrainProvider>
-        <ProvidedApp />
-      </TrainProvider>
-    </StationProvider>
+    <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+      <StationProvider>
+        <TrainProvider>
+          <ProvidedApp />
+        </TrainProvider>
+      </StationProvider>
+    </StripeProvider>
   );
 }
 
