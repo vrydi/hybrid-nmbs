@@ -14,3 +14,4 @@ export const regular = tw`text-white`;
 export const bold = tw`text-white font-bold text-[18px]`;
 export const navBar = tw`h-1/11 bg-[${nmbsBlueDark}] p-5 flex flex-row items-center justify-evenly w-full absolute z-1000 bottom-0`;
 export const flexColumn = tw`flex flex-col`;
+export const flushTitle = tw`text-white text-4xl font-bold text-center`;
