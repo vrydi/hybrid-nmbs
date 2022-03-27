@@ -1,12 +1,23 @@
-import { View, Text, ScrollView, FlatList, Pressable } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState } from "react";
 import { useTrainContext } from "../contexts/TrainContext";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   bold,
+  collapsibleButton,
+  collapsibleButtonContent,
+  collapsibleButtonTitle,
   flexBox,
   flushTitle,
   fullContainer,
+  navBar,
   regular,
   title,
 } from "../data/styles";
@@ -14,9 +25,12 @@ import tw from "twrnc";
 import { ActivityIndicator } from "react-native-paper";
 import { Icon } from "react-native-elements";
 import { useStationsContext } from "../contexts/StationContext";
+import Collapsible from "react-native-collapsible";
 
 export function TrainDetailPage() {
   const { trainData, activeTrainID, updateTrainData } = useTrainContext();
+  const [collapsedCompositionView, setCollapsedCompositionView] =
+    useState(false);
 
   useFocusEffect(() => {
     const timer = setInterval(() => {
@@ -35,6 +49,27 @@ export function TrainDetailPage() {
       {trainData !== undefined ? (
         <>
           <StopList />
+          <View style={collapsibleButton}>
+            <TouchableOpacity
+              onPress={() =>
+                setCollapsedCompositionView(!collapsedCompositionView)
+              }
+              style={flexBox}
+            >
+              <Text style={collapsibleButtonTitle}>Train composition</Text>
+              <Icon
+                name={collapsedCompositionView ? "chevron-down" : "chevron-up"}
+                type="ionicon"
+                color={"white"}
+              />
+            </TouchableOpacity>
+            <Collapsible
+              collapsed={collapsedCompositionView}
+              style={collapsibleButtonContent}
+            >
+              <Text>this was collapsed</Text>
+            </Collapsible>
+          </View>
         </>
       ) : (
         <ActivityIndicator
@@ -70,7 +105,7 @@ function Header() {
 function StopList() {
   const { trainData } = useTrainContext();
   return (
-    <View>
+    <View style={tw`pb-15`}>
       <FlatList
         ListHeaderComponent={Header}
         data={trainData.stops.stop}
