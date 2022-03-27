@@ -5,6 +5,7 @@ import {
   FlatList,
   Pressable,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { useTrainContext } from "../contexts/TrainContext";
@@ -17,6 +18,7 @@ import {
   flexBox,
   flushTitle,
   fullContainer,
+  image,
   navBar,
   regular,
   title,
@@ -67,7 +69,7 @@ export function TrainDetailPage() {
               collapsed={collapsedCompositionView}
               style={collapsibleButtonContent}
             >
-              <Text>this was collapsed</Text>
+              <TrainComposition />
             </Collapsible>
           </View>
         </>
@@ -148,6 +150,52 @@ function StopElement(props) {
           {trainStop.delay > 0 ? `+${trainStop.delay / 60}` : ""}
         </Text>
       </View>
+    </View>
+  );
+}
+
+function TrainComposition() {
+  const { trainComposition } = useTrainContext();
+  return (
+    <>
+      {trainComposition === undefined ? (
+        <Text>No data found</Text>
+      ) : (
+        <>
+          <Text>a</Text>
+          <FlatList
+            data={trainComposition[0].composition.units.unit}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <TrainCompositionElement unit={item} />}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+function TrainCompositionElement(props) {
+  const { unit } = props;
+  const imageURL =
+    "https://github.com/vrydi/hybrid-nmbs/blob/91fc438bf158f145d2c832d64645a6977b279115/assets/TrainSprites/" +
+    unit.materialSubTypeName.toLowerCase() +
+    "_" +
+    unit.materialType.orientation.toLowerCase() +
+    ".jpg";
+  return (
+    <View>
+      <Image
+        style={{ width: 50, height: 50 }}
+        source={{
+          uri:
+            "https://github.com/vrydi/hybrid-nmbs/blob/91fc438bf158f145d2c832d64645a6977b279115/assets/TrainSprites/" +
+            unit.materialSubTypeName.toLowerCase() +
+            "_" +
+            unit.materialType.orientation.toLowerCase() +
+            ".jpg?raw=true",
+        }}
+      />
+      <Text>{imageURL}</Text>
     </View>
   );
 }
