@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTrainContext } from "../contexts/TrainContext";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
   bold,
   collapsibleButton,
@@ -29,10 +29,15 @@ import { Icon } from "react-native-elements";
 import { useStationsContext } from "../contexts/StationContext";
 import Collapsible from "react-native-collapsible";
 
+// import am08m_a_left from "../assets/TrainSprites/am08m_a_left.jpg";
+import { images } from "../data/ImageURL";
+
 export function TrainDetailPage() {
-  const { trainData, activeTrainID, updateTrainData } = useTrainContext();
+  const { trainData, activeTrainID, updateTrainData, clearComposition } =
+    useTrainContext();
   const [collapsedCompositionView, setCollapsedCompositionView] =
     useState(false);
+  const navigation = useNavigation();
 
   useFocusEffect(() => {
     const timer = setInterval(() => {
@@ -44,6 +49,14 @@ export function TrainDetailPage() {
       clearInterval(timer);
     };
   });
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", () =>
+      clearComposition()
+    );
+
+    return unsubscribe;
+  }, []);
 
   return (
     <View style={fullContainer}>
@@ -58,7 +71,7 @@ export function TrainDetailPage() {
               }
               style={flexBox}
             >
-              <Text style={collapsibleButtonTitle}>Train composition</Text>
+              <Text style={collapsibleButtonTitle}>Trein compositie</Text>
               <Icon
                 name={collapsedCompositionView ? "chevron-down" : "chevron-up"}
                 type="ionicon"
@@ -159,14 +172,14 @@ function TrainComposition() {
   return (
     <>
       {trainComposition === undefined ? (
-        <Text>No data found</Text>
+        <Text style={tw`text-white text-center py-3`}>Geen data gevonden</Text>
       ) : (
         <>
-          <Text>a</Text>
           <FlatList
             data={trainComposition[0].composition.units.unit}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <TrainCompositionElement unit={item} />}
+            horizontal={true}
           />
         </>
       )}
@@ -176,26 +189,47 @@ function TrainComposition() {
 
 function TrainCompositionElement(props) {
   const { unit } = props;
-  const imageURL =
-    "https://github.com/vrydi/hybrid-nmbs/blob/91fc438bf158f145d2c832d64645a6977b279115/assets/TrainSprites/" +
-    unit.materialSubTypeName.toLowerCase() +
-    "_" +
-    unit.materialType.orientation.toLowerCase() +
-    ".jpg";
+
   return (
     <View>
-      <Image
-        style={{ width: 50, height: 50 }}
-        source={{
-          uri:
-            "https://github.com/vrydi/hybrid-nmbs/blob/91fc438bf158f145d2c832d64645a6977b279115/assets/TrainSprites/" +
-            unit.materialSubTypeName.toLowerCase() +
-            "_" +
-            unit.materialType.orientation.toLowerCase() +
-            ".jpg?raw=true",
-        }}
-      />
-      <Text>{imageURL}</Text>
+      <View style={{ height: 50 }}>
+        <Image
+          style={{ minWidth: 150, maxHeight: 50 }}
+          source={
+            images[
+              unit.materialSubTypeName.toLowerCase() +
+                "_" +
+                unit.materialType.orientation.toLowerCase()
+            ]
+          }
+        />
+      </View>
+      <View style={tw`flex-row justify-evenly py-2`}>
+        {unit.hasToilets === "1" && <Icon name="wc" color="white" />}
+        {(unit.hasSecondClassOutlets === "1" ||
+          unit.hasFirstClassOutlets === "1") && (
+          <Icon name="power" color="white" />
+        )}
+        {unit.hasAirco === "1" && (
+          <Icon
+            name="air-conditioner"
+            type="material-community"
+            color="white"
+          />
+        )}
+        {unit.hasPrmSection === "1" && <Icon name="accessible" color="white" />}
+        {unit.hasBikeSection === "1" && (
+          <Icon name="bike" type="material-community" color="white" />
+        )}
+      </View>
+      <View style={tw`flex-row justify-evenly`}>
+        {unit.seatsFirstClass > 0 && (
+          <Text style={regular}>1ste: {unit.seatsFirstClass}</Text>
+        )}
+        {unit.seatsSecondClass > 0 && (
+          <Text style={regular}>2e: {unit.seatsSecondClass}</Text>
+        )}
+      </View>
     </View>
   );
 }

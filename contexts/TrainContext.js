@@ -47,6 +47,11 @@ export function TrainProvider(props) {
     setTrainComposition(data.composition.segments.segment);
   };
 
+  const clearComposition = useCallback(() => {
+    setTrainComposition(undefined);
+    setTrainData(undefined);
+  }, [setTrainData, setTrainComposition]);
+
   const api = useMemo(
     () => ({
       trainData,
@@ -54,6 +59,7 @@ export function TrainProvider(props) {
       updateActiveTrainID,
       updateTrainData,
       trainComposition,
+      clearComposition,
     }),
     [
       trainData,
@@ -61,6 +67,7 @@ export function TrainProvider(props) {
       updateActiveTrainID,
       updateTrainData,
       trainComposition,
+      clearComposition,
     ]
   );
 
