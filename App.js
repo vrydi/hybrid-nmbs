@@ -22,7 +22,7 @@ import { flexBox, flexColumn, navBar, nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TrainDetailPage } from "./screens/TrainDetailPage";
-import { TrainProvider } from "./contexts/TrainContext";
+import { TrainProvider, useTrainContext } from "./contexts/TrainContext";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -38,6 +38,7 @@ export default function App() {
 }
 
 function ProvidedApp() {
+  const { trainData } = useTrainContext();
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -51,7 +52,18 @@ function ProvidedApp() {
           component={Navigation}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name={PAGE_TRAIN_DETAIL} component={TrainDetailPage} />
+        <Stack.Screen
+          options={{
+            title:
+              trainData === undefined
+                ? "Trein"
+                : trainData.vehicleinfo.type +
+                  "-" +
+                  trainData.vehicleinfo.number,
+          }}
+          name={PAGE_TRAIN_DETAIL}
+          component={TrainDetailPage}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

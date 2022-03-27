@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, FlatList } from "react-native";
+import { View, Text, ScrollView, FlatList, Pressable } from "react-native";
 import React from "react";
 import { useTrainContext } from "../contexts/TrainContext";
 import { useFocusEffect } from "@react-navigation/native";
@@ -31,9 +31,9 @@ export function TrainDetailPage() {
 
   return (
     <View style={fullContainer}>
+      {/* <ScrollView> */}
       {trainData !== undefined ? (
         <>
-          <Header />
           <StopList />
         </>
       ) : (
@@ -44,6 +44,7 @@ export function TrainDetailPage() {
           color={"white"}
         />
       )}
+      {/* </ScrollView> */}
     </View>
   );
 }
@@ -71,6 +72,7 @@ function StopList() {
   return (
     <View>
       <FlatList
+        ListHeaderComponent={Header}
         data={trainData.stops.stop}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <StopElement trainStop={item} />}
@@ -88,7 +90,7 @@ function StopElement(props) {
   const departureTime = new Date(0);
   departureTime.setUTCSeconds(trainStop.scheduledDepartureTime);
   return (
-    <View style={{ ...flexBox, ...tw`py-1` }}>
+    <View style={tw`py-1 w-8/9 mx-auto flex-row`}>
       <Icon
         name={arrived ? "ellipse" : "ellipse-outline"}
         type="ionicon"
