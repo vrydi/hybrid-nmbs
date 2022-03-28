@@ -4,6 +4,7 @@ export const nmbsBlueLight = "#3684B8";
 export const nmbsBlue = "#006ab3";
 export const nmbsBlueDark = "#035C97";
 export const fullContainer = tw`h-full bg-[${nmbsBlue}]`;
+export const darkContainer = tw`bg-[${nmbsBlueDark}] flex`;
 export const image = { width: "100%", height: "100%", resizeMode: "contain" };
 export const title = tw`text-white text-4xl font-bold text-center mt-10`;
 export const subTitle = tw`text-white text-2xl font-bold text-center mt-3`;
@@ -25,8 +26,4 @@ export const inputContainer = {
 };
 export const input = tw`bg-gray-300 rounded-xl h-full px-3`;
 export const error = tw`text-center text-red-400`;
-export const dottedLine = {
-  borderStyle: "dotted",
-  borderWidth: 1,
-  borderRadius: 1,
-};
+export const divider = tw`border-t border-[${nmbsBlueLight}]`;

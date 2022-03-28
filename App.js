@@ -17,6 +17,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import { ProductProvider } from "./contexts/ProductContext";
 import CheckoutForm from "./screens/PaymentPage";
 import { Provider as PaperProvider } from "react-native-paper";
+import { DisturbanceProvider } from "./contexts/DisturbancesContext";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,9 +27,11 @@ export default function App() {
       <ProductProvider>
         <StationProvider>
           <TrainProvider>
-            <PaperProvider>
-              <ProvidedApp />
-            </PaperProvider>
+            <DisturbanceProvider>
+              <PaperProvider>
+                <ProvidedApp />
+              </PaperProvider>
+            </DisturbanceProvider>
           </TrainProvider>
         </StationProvider>
       </ProductProvider>

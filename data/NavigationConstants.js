@@ -1,3 +1,4 @@
+import DisturbancePage from "../screens/DisturbancePage";
 import { HomePage } from "../screens/HomePage";
 import PayPage from "../screens/PayPage";
 import { StationSearchPage } from "../screens/StationSearchPage";
@@ -24,10 +25,16 @@ export const NAV_TICKETS = {
 };
 
 export const NAV_PAY = {
-  name: "Buy",
+  name: "Koop",
   icon: "payment",
   color: "white",
   component: PayPage,
+};
+export const NAV_DISTURBANCES = {
+  name: "Storing",
+  icon: "construction",
+  color: "white",
+  component: DisturbancePage,
 };
 
 export const NAV_ELEMENTS = [
@@ -35,6 +42,7 @@ export const NAV_ELEMENTS = [
   NAV_STATION_SEARCH,
   NAV_PAY,
   NAV_TICKETS,
+  NAV_DISTURBANCES,
 ];
 
 export const PAGE_TRAIN_DETAIL = "Trein";
