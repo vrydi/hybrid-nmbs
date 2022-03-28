@@ -60,7 +60,6 @@ export function TrainDetailPage() {
 
   return (
     <View style={fullContainer}>
-      {/* <ScrollView> */}
       {trainData !== undefined ? (
         <>
           <StopList />
@@ -94,7 +93,6 @@ export function TrainDetailPage() {
           color={"white"}
         />
       )}
-      {/* </ScrollView> */}
     </View>
   );
 }
