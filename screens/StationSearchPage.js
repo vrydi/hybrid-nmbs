@@ -19,6 +19,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-web";
 import { PAGE_TRAIN_DETAIL } from "../data/NavigationConstants";
 import { useTrainContext } from "../contexts/TrainContext";
+import { StopOverview } from "../components/DepartureOverview";
 
 export function StationSearchPage() {
   return (
@@ -134,21 +135,7 @@ function DepartureListElement(props) {
         navigation.push(PAGE_TRAIN_DETAIL);
       }}
     >
-      <View style={flexBox}>
-        <Text style={bold}>{departure.station}</Text>
-        <View style={tw`flex w-1/5 flex-row justify-between`}>
-          <Text style={regular}>{d.toLocaleTimeString().slice(0, 5)}</Text>
-          <Text style={tw`text-red-400 font-bold`}>
-            {departure.delay > 0 ? `+${departure.delay / 60}` : ""}
-          </Text>
-        </View>
-      </View>
-      <View style={flexBox}>
-        <Text style={regular}>Perron: {departure.platform}</Text>
-        <Text style={regular}>
-          {departure.vehicleinfo.type}-{departure.vehicleinfo.number}
-        </Text>
-      </View>
+      <StopOverview departure={departure} />
     </Pressable>
   );
 }

@@ -30,6 +30,7 @@ import { useStationsContext } from "../contexts/StationContext";
 import Collapsible from "react-native-collapsible";
 
 import { images } from "../data/ImageURL";
+import StopsOverview from "../components/StopsOverview";
 
 export function TrainDetailPage() {
   const { trainData, activeTrainID, updateTrainData, clearComposition } =
@@ -115,50 +116,20 @@ function Header() {
 
 function StopList() {
   const { trainData } = useTrainContext();
+  const { selectedStationID } = useStationsContext();
   return (
     <View style={tw`pb-15`}>
       <FlatList
         ListHeaderComponent={Header}
         data={trainData.stops.stop}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <StopElement trainStop={item} />}
+        renderItem={({ item }) => (
+          <StopsOverview
+            trainStop={item}
+            selectedStationID={selectedStationID}
+          />
+        )}
       />
-    </View>
-  );
-}
-
-function StopElement(props) {
-  const { trainStop } = props;
-  const { selectedStationID } = useStationsContext();
-
-  const arrived = trainStop.arrived === "1" || trainStop.id === "0";
-
-  const departureTime = new Date(0);
-  departureTime.setUTCSeconds(trainStop.scheduledDepartureTime);
-  return (
-    <View style={tw`py-1 w-8/9 mx-auto flex-row`}>
-      <Icon
-        name={arrived ? "ellipse" : "ellipse-outline"}
-        type="ionicon"
-        style={tw`px-3`}
-      />
-      <Text
-        style={tw` py-1 ${
-          arrived ? "text-black border-black" : "text-white border-white"
-        } flex-1 ${
-          selectedStationID === trainStop.stationinfo.id ? "border-b" : ""
-        }`}
-      >
-        {trainStop.station}
-      </Text>
-      <View style={tw`flex w-1/5 flex-row justify-between`}>
-        <Text style={regular}>
-          {departureTime.toLocaleTimeString().slice(0, 5)}
-        </Text>
-        <Text style={tw`text-red-400 font-bold`}>
-          {trainStop.delay > 0 ? `+${trainStop.delay / 60}` : ""}
-        </Text>
-      </View>
     </View>
   );
 }
