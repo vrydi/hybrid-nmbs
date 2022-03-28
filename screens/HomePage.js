@@ -100,7 +100,7 @@ export function HomePage() {
                   closeAfterSelecting={true}
                   items={items}
                   maxHeight={400}
-                  searchPlaceholder="Zoek en station..."
+                  searchPlaceholder="Zoek een station..."
                   placeholder="Selecteer een vertrekstation"
                   zIndex={3000}
                   zIndexInverse={1000}
@@ -133,7 +133,7 @@ export function HomePage() {
                   closeAfterSelecting={true}
                   items={items}
                   maxHeight={400}
-                  searchPlaceholder="Zoek en station..."
+                  searchPlaceholder="Zoek een station..."
                   placeholder="Selecteer een aankomststation"
                   zIndex={2000}
                   zIndexInverse={2000}
