@@ -24,9 +24,11 @@ import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import format from "date-fns/format";
+import { useConnectionContext } from "../contexts/ConnectionContext";
 
 export function HomePage() {
   const { stationStringList } = useStationsContext();
+  const { findConnection } = useConnectionContext();
   const {
     control,
     handleSubmit,
@@ -40,7 +42,7 @@ export function HomePage() {
       timePoint: "departure",
     },
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => findConnection(data);
 
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [openTimePicker, setOpenTimePicker] = useState(false);

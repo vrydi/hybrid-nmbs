@@ -29,7 +29,6 @@ import { Icon } from "react-native-elements";
 import { useStationsContext } from "../contexts/StationContext";
 import Collapsible from "react-native-collapsible";
 
-// import am08m_a_left from "../assets/TrainSprites/am08m_a_left.jpg";
 import { images } from "../data/ImageURL";
 
 export function TrainDetailPage() {

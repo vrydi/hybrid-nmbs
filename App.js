@@ -18,6 +18,7 @@ import { ProductProvider } from "./contexts/ProductContext";
 import CheckoutForm from "./screens/PaymentPage";
 import { Provider as PaperProvider } from "react-native-paper";
 import { DisturbanceProvider } from "./contexts/DisturbancesContext";
+import { ConnectionProvider } from "./contexts/ConnectionContext";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -28,9 +29,11 @@ export default function App() {
         <StationProvider>
           <TrainProvider>
             <DisturbanceProvider>
-              <PaperProvider>
-                <ProvidedApp />
-              </PaperProvider>
+              <ConnectionProvider>
+                <PaperProvider>
+                  <ProvidedApp />
+                </PaperProvider>
+              </ConnectionProvider>
             </DisturbanceProvider>
           </TrainProvider>
         </StationProvider>
