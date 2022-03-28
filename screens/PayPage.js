@@ -13,6 +13,7 @@ import { fullContainer, image } from "../data/styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "twrnc";
 import { useNavigation } from "@react-navigation/native";
+import { PAGE_PAYMENT } from "../data/NavigationConstants";
 
 export default function PayPage() {
   const {
@@ -27,6 +28,7 @@ export default function PayPage() {
   const onsubmit = () => {
     if (selectedProductID !== undefined) {
       buyProduct();
+      navigation.push(PAGE_PAYMENT);
     }
   };
 

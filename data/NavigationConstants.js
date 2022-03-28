@@ -38,3 +38,4 @@ export const NAV_ELEMENTS = [
 ];
 
 export const PAGE_TRAIN_DETAIL = "Trein";
+export const PAGE_PAYMENT = "Pay";

@@ -2,7 +2,11 @@ import * as React from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { Icon } from "react-native-elements";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { NAV_ELEMENTS, PAGE_TRAIN_DETAIL } from "./data/NavigationConstants";
+import {
+  NAV_ELEMENTS,
+  PAGE_PAYMENT,
+  PAGE_TRAIN_DETAIL,
+} from "./data/NavigationConstants";
 import { nmbsBlueDark } from "./data/styles";
 import { StationProvider } from "./contexts/StationContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -11,10 +15,10 @@ import { TrainProvider, useTrainContext } from "./contexts/TrainContext";
 import { STRIPE_PUBLISHABLE_KEY } from "@env";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { ProductProvider } from "./contexts/ProductContext";
+import CheckoutForm from "./screens/PaymentPage";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
 export default function App() {
   return (
     <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
@@ -56,6 +60,7 @@ function ProvidedApp() {
           name={PAGE_TRAIN_DETAIL}
           component={TrainDetailPage}
         />
+        <Stack.Screen name={PAGE_PAYMENT} component={CheckoutForm} />
       </Stack.Navigator>
     </NavigationContainer>
   );

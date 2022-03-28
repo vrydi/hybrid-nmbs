@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import Constants from "expo-constants";
+import { useConfirmPayment } from "@stripe/stripe-react-native";
 const { manifest } = Constants;
 const uri = `http://${manifest.debuggerHost.split(":").shift()}:3000`;
 
@@ -17,6 +18,14 @@ export function ProductProvider(props) {
   const [prices, setPrices] = useState([]);
   const [selectedProductID, setSelectedProductID] = useState();
   const [clientSecret, setClientSecret] = useState();
+  const [paymentProgress, setPaymentProgress] = useState({
+    status: "",
+    message: "",
+  });
+
+  const [tickets, setTickets] = useState([]);
+
+  const { confirmPayment } = useConfirmPayment();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -41,6 +50,33 @@ export function ProductProvider(props) {
       .then((data) => setClientSecret(data.clientSecret));
   };
 
+  const processPayment = async (data) => {
+    console.log("processing payment");
+    setPaymentProgress({ status: "started", message: "" });
+    const billingdetails = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+    };
+
+    const { paymentIntent, error } = await confirmPayment(clientSecret, {
+      type: "Card",
+      billingDetails: billingdetails,
+    });
+
+    if (error) {
+      setPaymentProgress({ status: "failed", message: error.message });
+    } else if (paymentIntent) {
+      setPaymentProgress({ status: "success", message: "Payment successful" });
+      console.log(paymentIntent);
+    } else {
+      setPaymentProgress({
+        status: "failed",
+        message: "no payment intent response",
+      });
+    }
+  };
+
   const api = useMemo(
     () => ({
       products,
@@ -48,8 +84,18 @@ export function ProductProvider(props) {
       selectedProductID,
       setSelectedProductID,
       buyProduct,
+      paymentProgress,
+      processPayment,
     }),
-    [products, prices, selectedProductID, setSelectedProductID, buyProduct]
+    [
+      products,
+      prices,
+      selectedProductID,
+      setSelectedProductID,
+      buyProduct,
+      paymentProgress,
+      processPayment,
+    ]
   );
 
   return (

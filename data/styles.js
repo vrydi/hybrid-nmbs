@@ -17,3 +17,10 @@ export const collapsibleButtonContent = tw`bg-[${nmbsBlue}]`;
 export const collapsibleButtonTitle = tw`p-5 text-white`;
 export const flexColumn = tw`flex flex-col`;
 export const flushTitle = tw`text-white text-4xl font-bold text-center`;
+export const inputContainer = {
+  height: 50,
+  marginHorizontal: 20,
+  marginTop: 40,
+};
+export const input = tw`bg-gray-300 rounded-xl h-full px-3`;
+export const error = tw`text-center text-red-400`;
