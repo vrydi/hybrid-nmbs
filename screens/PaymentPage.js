@@ -19,6 +19,7 @@ import {
   TextInput,
   Button,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { CardField, useConfirmPayment } from "@stripe/stripe-react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -43,115 +44,117 @@ export default function CheckoutForm() {
       card: "",
     },
   });
-  const { paymentProgress, processPayment } = useProductContext();
+  const { paymentProgress, processPayment, setPaymentProgress } =
+    useProductContext();
   const navigation = useNavigation();
-  console.log(paymentProgress);
 
   const onSubmit = async (data) => {
     console.log("submitting");
-    console.log(data);
     if (!data.card.complete) {
-      console.log("no card details");
       return;
     }
     processPayment(data);
   };
 
   function dismiss() {
-    if (paymentProgress.status === "success")
+    if (paymentProgress.status === "success") {
       navigation.navigate(NAV_TICKETS.name);
+      setPaymentProgress({ status: "", message: "" });
+    }
   }
 
   return (
     <View style={fullContainer}>
-      <View style={inputContainer}>
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <TextInput
-                style={input}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                value={value}
-                keyboardType="email-address"
-                placeholder="email"
-                autoComplete="email"
-              />
-              {errors.email && <Text style={error}>Email required</Text>}
-            </>
-          )}
-          name="email"
-          rules={{ required: true, pattern: emailRegex }}
-        />
-      </View>
+      <ScrollView>
+        <View style={inputContainer}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <TextInput
+                  style={input}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                  keyboardType="email-address"
+                  placeholder="email"
+                  autoComplete="email"
+                />
+                {errors.email && <Text style={error}>Email required</Text>}
+              </>
+            )}
+            name="email"
+            rules={{ required: true, pattern: emailRegex }}
+          />
+        </View>
 
-      <View style={inputContainer}>
+        <View style={inputContainer}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <TextInput
+                  style={input}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                  keyboardType="default"
+                  placeholder="Voornaam"
+                  autoComplete="name"
+                />
+                {errors.firstName && <Text style={error}> *Verplicht</Text>}
+              </>
+            )}
+            name="firstName"
+            rules={{ required: true }}
+          />
+        </View>
+
+        <View style={inputContainer}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <TextInput
+                  style={input}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                  keyboardType="default"
+                  placeholder="Achternaam"
+                  autoComplete="name-family"
+                />
+                {errors.lastName && <Text style={error}>*Verplicht</Text>}
+              </>
+            )}
+            name="lastName"
+            rules={{ required: true }}
+          />
+        </View>
+
         <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <>
-              <TextInput
-                style={input}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
+              <CardField
+                postalCodeEnabled={true}
+                placeholder={{ number: "4242 4242 4242 4242" }}
+                cardStyle={input}
+                style={inputContainer}
                 value={value}
-                keyboardType="default"
-                placeholder="Voornaam"
-                autoComplete="name"
+                onCardChange={(cardDetails) => onChange(cardDetails)}
               />
-              {errors.firstName && <Text style={error}> *Verplicht</Text>}
+              {errors.card && <Text style={error}>Card required</Text>}
             </>
           )}
-          name="firstName"
+          name="card"
           rules={{ required: true }}
         />
-      </View>
-
-      <View style={inputContainer}>
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <TextInput
-                style={input}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                value={value}
-                keyboardType="default"
-                placeholder="Achternaam"
-                autoComplete="name-family"
-              />
-              {errors.lastName && <Text style={error}>*Verplicht</Text>}
-            </>
-          )}
-          name="lastName"
-          rules={{ required: true }}
-        />
-      </View>
-
-      <Controller
-        control={control}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <CardField
-              postalCodeEnabled={true}
-              placeholder={{ number: "4242 4242 4242 4242" }}
-              cardStyle={input}
-              style={inputContainer}
-              value={value}
-              onCardChange={(cardDetails) => onChange(cardDetails)}
-            />
-            {errors.card && <Text style={error}>Card required</Text>}
-          </>
-        )}
-        name="card"
-        rules={{ required: true }}
-      />
+      </ScrollView>
 
       {paymentProgress.status === "started" ? (
         <TouchableOpacity
-          style={tw`rounded-xl w-3/4 py-5 absolute z-1000 bottom-0 left-1/8 m-5 py-4 mx-auto bg-gray-400`}
+          style={tw`rounded-xl w-3/4 py-5 z-1000 bottom-0 m-5 py-4 mx-auto bg-gray-400`}
           disabled={true}
           onPress={handleSubmit(onSubmit)}
         >
@@ -159,7 +162,7 @@ export default function CheckoutForm() {
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={tw`rounded-xl w-3/4 py-5 absolute z-1000 bottom-0 left-1/8 m-5 py-4 mx-auto bg-orange-500
+          style={tw`rounded-xl w-3/4 py-5 z-1000 bottom-0 m-5 py-4 mx-auto bg-orange-500
         `}
           disabled={false}
           onPress={handleSubmit(onSubmit)}

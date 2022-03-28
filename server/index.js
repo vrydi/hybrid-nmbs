@@ -20,7 +20,6 @@ app.listen(port, () => {
 app.get("/get-products", async (req, res) => {
   try {
     const products = await stripe.products.list({ limit: 5 });
-    console.log(products);
     res.json({ products: products });
   } catch (error) {
     console.error(error);
@@ -31,7 +30,6 @@ app.get("/get-products", async (req, res) => {
 app.get("/get-prices", async (req, res) => {
   try {
     const prices = await stripe.prices.list({ limit: 5 });
-    console.log(prices);
     res.json({ prices: prices });
   } catch (error) {
     console.error(error);
@@ -41,7 +39,6 @@ app.get("/get-prices", async (req, res) => {
 
 const calculateOrderAmount = async (id) => {
   const prices = await stripe.prices.list({ limit: 5 });
-  // console.log(prices);
   let total = 0;
   prices.data.map((price) => {
     if (price.product === id) total += price.unit_amount;
@@ -50,7 +47,6 @@ const calculateOrderAmount = async (id) => {
 };
 
 app.post("/create-payment-intent", async (req, res) => {
-  console.log(req.body);
   const { id } = req.body;
 
   // Create a PaymentIntent with the order amount and currency

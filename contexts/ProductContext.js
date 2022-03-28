@@ -32,7 +32,6 @@ export function ProductProvider(props) {
       console.log("fetching products");
       const data = await (await fetch(`${uri}/get-products`)).json();
       const data2 = await (await fetch(`${uri}/get-prices`)).json();
-      console.log(data2.prices.data);
       setProducts(data.products.data);
       setPrices(data2.prices.data);
     }
@@ -68,7 +67,16 @@ export function ProductProvider(props) {
       setPaymentProgress({ status: "failed", message: error.message });
     } else if (paymentIntent) {
       setPaymentProgress({ status: "success", message: "Payment successful" });
-      console.log(paymentIntent);
+      setTickets([
+        ...tickets,
+        {
+          ...paymentIntent,
+          product: products.filter(
+            (product) => product.id == selectedProductID
+          )[0],
+        },
+      ]);
+      setSelectedProductID(undefined);
     } else {
       setPaymentProgress({
         status: "failed",
@@ -86,6 +94,8 @@ export function ProductProvider(props) {
       buyProduct,
       paymentProgress,
       processPayment,
+      tickets,
+      setPaymentProgress,
     }),
     [
       products,
@@ -95,6 +105,8 @@ export function ProductProvider(props) {
       buyProduct,
       paymentProgress,
       processPayment,
+      tickets,
+      setPaymentProgress,
     ]
   );
 

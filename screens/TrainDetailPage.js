@@ -41,7 +41,6 @@ export function TrainDetailPage() {
 
   useFocusEffect(() => {
     const timer = setInterval(() => {
-      console.log("update");
       if (activeTrainID !== undefined) updateTrainData();
     }, 15000);
 

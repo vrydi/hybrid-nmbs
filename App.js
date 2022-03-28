@@ -16,6 +16,7 @@ import { STRIPE_PUBLISHABLE_KEY } from "@env";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { ProductProvider } from "./contexts/ProductContext";
 import CheckoutForm from "./screens/PaymentPage";
+import { Provider as PaperProvider } from "react-native-paper";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,7 +26,9 @@ export default function App() {
       <ProductProvider>
         <StationProvider>
           <TrainProvider>
-            <ProvidedApp />
+            <PaperProvider>
+              <ProvidedApp />
+            </PaperProvider>
           </TrainProvider>
         </StationProvider>
       </ProductProvider>

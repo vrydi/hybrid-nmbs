@@ -18,7 +18,6 @@ export function StationProvider(props) {
   const [selectedStation, setSelectedStation] = useState();
 
   useEffect(() => {
-    console.log("useEffect");
     async function loadStations() {
       const temp = await fetchJson(
         "https://api.irail.be/stations?lang=nl&format=json"
@@ -47,7 +46,6 @@ export function StationProvider(props) {
     [selectedStationID]
   );
   useEffect(() => {
-    console.log("use effect set station", selectedStationID);
     if (selectedStationID !== undefined) {
       updateSelectedStationData();
     }

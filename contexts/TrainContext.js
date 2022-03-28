@@ -22,7 +22,6 @@ export function TrainProvider(props) {
     [activeTrainID]
   );
   useEffect(() => {
-    console.log("use effect set train", activeTrainID);
     if (activeTrainID !== undefined) {
       updateTrainData();
       getTrainComposition();

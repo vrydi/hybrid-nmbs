@@ -32,14 +32,6 @@ export default function PayPage() {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () =>
-      setSelectedProductID(undefined)
-    );
-
-    return unsubscribe;
-  }, []);
-
   return (
     <SafeAreaView style={fullContainer}>
       <View style={tw`w-full max-h-60`}>

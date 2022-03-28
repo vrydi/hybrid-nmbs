@@ -46,13 +46,6 @@ function DepartureSelectDropdown() {
     },
   });
   const onSubmit = (data) => {
-    console.log("submit", data);
-    if (data === "") {
-      console.log("empty data");
-    }
-    if (data === undefined) {
-      console.log("undefined data");
-    }
     if (data !== "") updateSelectedStationID(data);
   };
   return (
@@ -97,7 +90,6 @@ function DepartureList() {
 
   useFocusEffect(() => {
     const timer = setInterval(() => {
-      console.log("update");
       if (selectedStationID !== undefined) updateSelectedStationData();
     }, 30000);
 
