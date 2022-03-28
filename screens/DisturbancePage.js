@@ -1,5 +1,12 @@
-import { View, Text, Pressable, FlatList, ScrollView } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  FlatList,
+  ScrollView,
+  Linking,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   bold,
@@ -12,6 +19,7 @@ import {
   flexBox,
   flushTitle,
   fullContainer,
+  regular,
   subTitle,
   title,
 } from "../data/styles";
@@ -26,6 +34,10 @@ export default function DisturbancePage() {
   const [workOpen, setWorkOpen] = useState(true);
   const { workDisturbances, defectDisturbances, fetchDisturbances } =
     useDisturbanceContext();
+
+  useEffect(() => {
+    fetchDisturbances();
+  }, []);
 
   const toggleDistOpen = () => {
     setDistOpen(!distOpen);
@@ -42,6 +54,7 @@ export default function DisturbancePage() {
       <ScrollView>
         <View style={darkContainer}>
           <Pressable style={flexBox} onPress={() => toggleDistOpen()}>
+            <Icon name="warning" color="white" />
             <Text style={collapsibleButtonTitle}>Storingen</Text>
             <Icon
               name={distOpen ? "chevron-down" : "chevron-up"}
@@ -64,6 +77,11 @@ export default function DisturbancePage() {
         </View>
         <View style={darkContainer}>
           <Pressable style={flexBox} onPress={() => toggleWorkOpen()}>
+            <Icon
+              name={"account-hard-hat"}
+              type="material-community"
+              color={"white"}
+            />
             <Text style={collapsibleButtonTitle}>Werken / geplande werken</Text>
             <Icon
               name={workOpen ? "chevron-down" : "chevron-up"}
@@ -91,9 +109,33 @@ export default function DisturbancePage() {
 
 function DistListEl(props) {
   const { dist } = props;
+  const [open, setOpen] = useState(true);
+
+  const toggleOpen = () => setOpen(!open);
   return (
-    <View style={tw`p-5`}>
-      <Text style={bold}>{dist.title}</Text>
+    <View style={tw`px-5`}>
+      <Pressable style={flexBox} onPress={() => toggleOpen()}>
+        <Text style={collapsibleButtonTitle}>{dist.title}</Text>
+        <Icon
+          name={open ? "chevron-down" : "chevron-up"}
+          type="ionicon"
+          color={"white"}
+        />
+      </Pressable>
+      <Collapsible collapsed={open} style={collapsibleButtonContent}>
+        <Text style={regular}>{dist.description}</Text>
+        <ScrollView>
+          {dist.descriptionLinks.descriptionLink.map((desc, i) => {
+            <Text
+              key={i}
+              style={bold}
+              onPress={() => Linking.openURL(desc.link)}
+            >
+              {desc.Text}
+            </Text>;
+          })}
+        </ScrollView>
+      </Collapsible>
     </View>
   );
 }
