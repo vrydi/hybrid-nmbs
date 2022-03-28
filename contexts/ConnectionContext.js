@@ -25,7 +25,10 @@ export function ConnectionProvider(props) {
     setConnectionInfo(raw.connection);
   }
 
-  const api = useMemo(() => ({ findConnection }), [findConnection]);
+  const api = useMemo(
+    () => ({ findConnection, connectionInfo }),
+    [findConnection, connectionInfo]
+  );
 
   return (
     <ConnectionContext.Provider value={api}>

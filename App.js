@@ -4,6 +4,7 @@ import { Icon } from "react-native-elements";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
   NAV_ELEMENTS,
+  PAGE_CONNECTION,
   PAGE_PAYMENT,
   PAGE_TRAIN_DETAIL,
 } from "./data/NavigationConstants";
@@ -19,6 +20,7 @@ import CheckoutForm from "./screens/PaymentPage";
 import { Provider as PaperProvider } from "react-native-paper";
 import { DisturbanceProvider } from "./contexts/DisturbancesContext";
 import { ConnectionProvider } from "./contexts/ConnectionContext";
+import ConnectionPage from "./screens/ConnectionPage";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -70,6 +72,7 @@ function ProvidedApp() {
           component={TrainDetailPage}
         />
         <Stack.Screen name={PAGE_PAYMENT} component={CheckoutForm} />
+        <Stack.Screen name={PAGE_CONNECTION} component={ConnectionPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
