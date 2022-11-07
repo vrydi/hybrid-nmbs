@@ -191,9 +191,9 @@ export function HomePage() {
                   <Text style={buttonText}>{format(value, "dd-MM-yyyy")}</Text>
                   {openDatePicker && (
                     <RNDateTimePicker
-                      onChange={(res) => {
+                      onChange={(event, selectedDate) => {
                         setOpenDatePicker(false);
-                        onChange(new Date(res.nativeEvent.timestamp));
+                        if (selectedDate) onChange(new Date(selectedDate));
                       }}
                       value={value}
                       minimumDate={new Date()}
@@ -219,15 +219,24 @@ export function HomePage() {
                   </Text>
                   {openTimePicker && (
                     <RNDateTimePicker
-                      onChange={(res) => {
+                      onChange={(event, selectedDate) => {
                         setOpenTimePicker(false);
-                        onChange(new Date(res.nativeEvent.timestamp));
+                        if (selectedDate) onChange(new Date(selectedDate));
                       }}
                       value={value}
                       minimumDate={new Date()}
                       mode={"time"}
-                      display={"spinner"}
+                      display={"default"}
                       is24Hour={true}
+                      style={{
+                        backgroundColor: "blue",
+                        btnConfirm: {
+                          paddingVertical: 0,
+                        },
+                        btnCancel: {
+                          paddingVertical: 0,
+                        },
+                      }}
                     />
                   )}
                 </TouchableOpacity>

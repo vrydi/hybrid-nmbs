@@ -29,7 +29,7 @@ export default function TicketPage() {
       <Text style={title}>TicketPage</Text>
       <ScrollView>
         {tickets.map((ticket) => (
-          <TicketView ticket={ticket} />
+          <TicketView ticket={ticket} key={ticket.id} />
         ))}
       </ScrollView>
     </SafeAreaView>

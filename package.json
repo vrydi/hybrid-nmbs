@@ -10,14 +10,14 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^6.1.0",
+    "@react-native-community/datetimepicker": "4.0.0",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/material-bottom-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",
     "@stripe/react-stripe-js": "^1.7.0",
     "@stripe/stripe-js": "^1.25.0",
-    "@stripe/stripe-react-native": "^0.4.0",
+    "@stripe/stripe-react-native": "0.2.3",
     "date-fns": "^2.28.0",
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
@@ -35,7 +35,7 @@
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
-    "react-native-svg": "^12.3.0",
+    "react-native-svg": "12.1.1",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",
     "stripe": "^8.212.0",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "express": "^4.17.3",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.20"
   },
   "private": true
 }
