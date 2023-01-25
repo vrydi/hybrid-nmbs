@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   Pressable,
   useWindowDimensions,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import {
@@ -14,24 +16,47 @@ import {
   title,
   bold,
   regular,
+  button,
+  buttonText,
+  fullPageFlex,
 } from "../data/styles";
 import { useProductContext } from "../contexts/ProductContext";
 import QRCode from "react-native-qrcode-svg";
 import tw from "twrnc";
-import { Card, Divider, Modal, Portal } from "react-native-paper";
+import { Button, Card, Divider, List, Modal, Portal } from "react-native-paper";
 import Dash from "react-native-dash";
 import format from "date-fns/format";
+import { NAV_PAY } from "../data/NavigationConstants";
+import { useNavigation } from "@react-navigation/native";
 
 export default function TicketPage() {
   const { tickets, selectedProductID } = useProductContext();
+  const navigation = useNavigation();
+
+  const navigateToTicketPage = () => {
+    navigation.navigate(NAV_PAY.name);
+  };
+
   return (
     <SafeAreaView style={fullContainer}>
       <Text style={title}>TicketPage</Text>
-      <ScrollView>
-        {tickets.map((ticket) => (
-          <TicketView ticket={ticket} key={ticket.id} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={tickets}
+        renderItem={({ item }) => <TicketView ticket={item} />}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={() => (
+          <View style={fullPageFlex}>
+            <Text style={subTitle}>Geen tickets gevonden</Text>
+            <TouchableOpacity
+              title="buy tickets"
+              onPress={navigateToTicketPage}
+              style={button}
+            >
+              <Text style={buttonText}>Koop een ticket</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 }
@@ -59,7 +84,7 @@ function TicketView(props) {
           </View>
         </Pressable>
         <View style={tw`w-5/11`}>
-          <Text style={bold}> Gekocht op</Text>
+          <Text style={bold}>Gekocht op</Text>
           <Text style={regular}>{format(d, "dd/MM/yyyy HH:mm:ss")}</Text>
           <Text style={bold}>Ticket code</Text>
           <Text style={regular}>{ticket.created / 1000}</Text>

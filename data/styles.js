@@ -7,7 +7,7 @@ export const fullContainer = tw`h-full bg-[${nmbsBlue}]`;
 export const darkContainer = tw`bg-[${nmbsBlueDark}] flex h-auto`;
 export const image = { width: "100%", height: "100%", resizeMode: "contain" };
 export const title = tw`text-white text-4xl font-bold text-center mt-10 mb-5`;
-export const subTitle = tw`text-white text-2xl font-bold text-center mt-3`;
+export const subTitle = tw`text-white text-2xl font-bold text-center mt-3 mb-3`;
 export const inputDropdownListContainer = tw`w-8/9 mx-auto my-2`;
 export const flexBox = tw`flex flex-row items-center justify-between w-8/9 mx-auto`;
 export const button = tw`px-5 text-white py-3 bg-[${nmbsBlueDark}] rounded-lg`;
@@ -28,3 +28,5 @@ export const input = tw`bg-gray-300 rounded-xl h-full px-3`;
 export const error = tw`text-center text-red-400`;
 export const divider = tw`border-t border-[${nmbsBlueLight}]`;
 export const list = tw`bg-[${nmbsBlue}]`;
+
+export const fullPageFlex = tw`flex flex-col h-full items-center justify-center my-auto`;
