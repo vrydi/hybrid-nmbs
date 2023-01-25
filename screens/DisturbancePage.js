@@ -68,6 +68,7 @@ export default function DisturbancePage() {
             ListEmptyComponent={() => (
               <List.Item title="Geen Storingen" titleStyle={regular} />
             )}
+            style={tw`px-0 w-full`}
           />
         </List.Accordion>
 
