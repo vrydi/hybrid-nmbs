@@ -27,7 +27,7 @@ export default function ConnectionPage() {
   const { connectionInfo } = useConnectionContext();
   return (
     <View style={fullContainer}>
-      <View style={tw`pb-5`}>
+      <View style={tw`pb-5 pt-2`}>
         <Text style={flushTitle}>{connectionInfo[0].departure.station}</Text>
         <Icon
           name="arrow-down-outline"
@@ -84,7 +84,7 @@ function Header(props) {
         {connection.vias && (
           <>
             {connection.vias.via.map((via) => (
-              <View style={tw`flex-1`}>
+              <View style={tw`flex-1`} key={via}>
                 <Icon
                   style={tw`p-2 rounded-100 w-[30px] h-[30px] ${
                     via.departure.vehicleinfo.type.includes("S")
@@ -192,19 +192,20 @@ function ViaHeader(props) {
   const { station, stationName } = props;
   const depTime = new Date(0);
   depTime.setUTCSeconds(station.time);
+  console.log("via station", station);
   return (
     <View>
-      <View style={tw`flex-row justify-center px-3 items-center`}>
+      <View style={tw`flex flex-row justify-center px-3 items-center`}>
         <Icon name="transit-transfer" type="material-community" color="white" />
         <Text style={tw`grow text-white text-4xl font-bold text-center`}>
           {stationName}
         </Text>
       </View>
-      <View style={tw`flex-row justify-between px-5`}>
+      <View style={tw`flex flex-row justify-between items-center px-5`}>
         <Text style={regular}>Perron: {station.platform}</Text>
         <View style={tw`flex w-2/5 flex-row justify-between`}>
           <Text style={bold}>
-            Vertrek: {depTime.toLocaleTimeString().slice(0, 5)}
+            Vertrek: {depTime.toLocaleTimeString().slice(0, 5)},
           </Text>
           <Text style={error}>
             {station.delay > 0 ? `+${station.delay / 60}` : ""}

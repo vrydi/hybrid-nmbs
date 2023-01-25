@@ -22,9 +22,6 @@ import { DisturbanceProvider } from "./contexts/DisturbancesContext";
 import { ConnectionProvider } from "./contexts/ConnectionContext";
 import ConnectionPage from "./screens/ConnectionPage";
 
-import { LogBox } from "react-native";
-LogBox.ignoreLogs(["Require cycle: "]);
-
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 export default function App() {
