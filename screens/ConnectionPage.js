@@ -9,25 +9,32 @@ import React, { useState } from "react";
 import {
   bold,
   collapsibleButtonContent,
+  container,
+  darkContainerFull,
+  darkContainer,
   divider,
   error,
+  errorBold,
   flexBox,
   flushTitle,
   fullContainer,
   regular,
-  title,
+  subTitle,
 } from "../data/styles";
 import { useConnectionContext } from "../contexts/ConnectionContext";
 import tw from "twrnc";
 import { Icon } from "react-native-elements";
 import Collapsible from "react-native-collapsible";
 import StopsOverview from "../components/StopsOverview";
+import { Divider, List } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ConnectionPage() {
   const { connectionInfo } = useConnectionContext();
+
   return (
-    <View style={fullContainer}>
-      <View style={tw`pb-5 pt-2`}>
+    <View style={darkContainerFull}>
+      <View style={tw`py-2`}>
         <Text style={flushTitle}>{connectionInfo[0].departure.station}</Text>
         <Icon
           name="arrow-down-outline"
@@ -39,121 +46,123 @@ export default function ConnectionPage() {
       </View>
       <FlatList
         data={connectionInfo}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ConnectionEL connection={item} />}
-        ItemSeparatorComponent={() => <View style={divider} />}
+        keyExtractor={(item) => item.id + item.departure.time}
+        renderItem={({ item }) => <ConnectionAccordion connection={item} />}
       />
     </View>
   );
 }
 
-function Header(props) {
-  const { connection } = props;
-
+function ConnectionAccordion({ connection }) {
   const depTime = new Date(0);
   depTime.setUTCSeconds(connection.departure.time);
+  if (connection.departure.delay > 0) {
+    depTime.setUTCSeconds(depTime.getUTCSeconds() + connection.departure.delay);
+  }
   const arrTime = new Date(0);
   arrTime.setUTCSeconds(connection.arrival.time);
-
-  return (
-    <View style={flexBox}>
-      <Text style={bold}>{depTime.toLocaleTimeString().slice(0, 5)}</Text>
-      <View style={tw`flex-1 flex-row px-2 justify-between`}>
-        <View style={tw`flex-1`}>
-          <Icon
-            style={tw`p-2 rounded-100 w-[30px] h-[30px] ${
-              connection.departure.vehicleinfo.type.includes("S")
-                ? "bg-yellow-500"
-                : connection.departure.vehicleinfo.type.includes("IC")
-                ? "bg-blue-500"
-                : "bg-blue-700"
-            }`}
-            name={"train"}
-            size={15}
-          />
-          <View
-            style={tw`grow h-[5px] ml-[30px] relative -top-1/2 -z-10 ${
-              connection.departure.vehicleinfo.type.includes("S")
-                ? "bg-yellow-500"
-                : connection.departure.vehicleinfo.type.includes("IC")
-                ? "bg-blue-500"
-                : "bg-blue-700"
-            }`}
-          />
-        </View>
-        {connection.vias && (
-          <>
-            {connection.vias.via.map((via) => (
-              <View style={tw`flex-1`} key={via}>
-                <Icon
-                  style={tw`p-2 rounded-100 w-[30px] h-[30px] ${
-                    via.departure.vehicleinfo.type.includes("S")
-                      ? "bg-yellow-500"
-                      : via.departure.vehicleinfo.type.includes("IC")
-                      ? "bg-blue-500"
-                      : "bg-blue-700"
-                  }`}
-                  name={"train"}
-                  size={15}
-                />
-                <View
-                  style={tw`grow h-[5px] ml-[30px] relative -top-1/2 -z-10 ${
-                    via.departure.vehicleinfo.type.includes("S")
-                      ? "bg-yellow-500"
-                      : via.departure.vehicleinfo.type.includes("IC")
-                      ? "bg-blue-500"
-                      : "bg-blue-700"
-                  }`}
-                />
-              </View>
-            ))}
-          </>
-        )}
-      </View>
-      <Text style={bold}>{arrTime.toLocaleTimeString().slice(0, 5)}</Text>
-    </View>
-  );
-}
-
-function ConnectionEL(props) {
-  const { connection } = props;
-  const [closed, setClosed] = useState(true);
-
-  console.log("connection", connection.vias);
+  if (connection.arrival.delay > 0) {
+    arrTime.setUTCSeconds(arrTime.getUTCSeconds() + connection.arrival.delay);
+  }
 
   return (
     <>
-      <TouchableOpacity style={tw`py-5`} onPress={() => setClosed(!closed)}>
-        <Header connection={connection} />
-      </TouchableOpacity>
-      <Collapsible collapsed={closed} style={collapsibleButtonContent}>
-        <StationHeader
-          station={connection.departure}
-          stationName={connection.departure.station}
-        />
-        {connection.departure.stops && (
-          <FlatList
-            data={connection.departure.stops.stop}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <StopsOverview trainStop={item} />}
-          />
+      <List.Accordion
+        title={<HeaderTrains connection={connection} />}
+        titleStyle={flexBox}
+        left={() => (
+          <Text style={connection.departure.delay > 0 ? errorBold : bold}>
+            {depTime.toLocaleTimeString().slice(0, 5)}
+          </Text>
         )}
-        {connection.vias && (
-          <ScrollView>
-            {connection.vias.via.map((via, i) => (
-              <ViaComponent via={via} key={i} />
-            ))}
-          </ScrollView>
+        right={() => (
+          <Text style={connection.arrival.delay > 0 ? errorBold : bold}>
+            {arrTime.toLocaleTimeString().slice(0, 5)}
+          </Text>
         )}
-
-        <Text style={flushTitle}>{connection.arrival.station}</Text>
-      </Collapsible>
+        style={darkContainer}
+        id={connection.departure.time}
+      >
+        <ConnectionEL connection={connection} />
+      </List.Accordion>
+      <Divider style={divider} />
     </>
   );
 }
 
-function ViaComponent(props) {
-  const { via } = props;
+function HeaderTrains({ connection }) {
+  return (
+    <View style={tw`w-[210px] flex flex-row items-center`}>
+      <TrainEl type={connection.departure.vehicleinfo.type} />
+      {connection.vias && (
+        <>
+          {connection.vias.via.map((via) => (
+            <TrainEl type={via.departure.vehicleinfo.type} key={via} />
+          ))}
+        </>
+      )}
+    </View>
+  );
+}
+
+function TrainEl({ type }) {
+  const colour = type.includes("S")
+    ? "bg-yellow-500"
+    : type.includes("IC")
+    ? "bg-blue-500"
+    : "bg-blue-700";
+
+  return (
+    <>
+      <Icon
+        name={"train"}
+        size={15}
+        style={tw`p-2 rounded-100 w-[30px] h-[30px] ${colour}`}
+      />
+      <View style={tw`flex-grow ${colour} h-[5px]`} />
+    </>
+  );
+}
+
+function ConnectionEL({ connection }) {
+  const depTime = new Date(0);
+  depTime.setUTCSeconds(connection.arrival.time);
+
+  return (
+    <View style={container}>
+      <StationHeader
+        station={connection.departure}
+        stationName={connection.departure.station}
+      />
+      {connection.departure.stops && (
+        <>
+          {connection.departure.stops.stop.map((stop) => (
+            <StopsOverview trainStop={stop} key={stop.id} />
+          ))}
+        </>
+      )}
+      {connection.vias && (
+        <FlatList
+          data={connection.vias.via}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ViaComponent via={item} />}
+        />
+      )}
+      <Text style={flushTitle}>{connection.arrival.station}</Text>
+      <ArrDepDetails
+        type="Aankomst"
+        platform={connection.arrival.platform}
+        time={depTime}
+        delay={connection.arrival.delay}
+      />
+    </View>
+  );
+}
+
+function ViaComponent({ via }) {
+  const arrTime = new Date(0);
+  arrTime.setUTCSeconds(via.arrival.time);
+
   return (
     <>
       <ViaHeader station={via.departure} stationName={via.station} />
@@ -175,15 +184,15 @@ function StationHeader(props) {
   return (
     <View>
       <Text style={flushTitle}>{stationName}</Text>
-      <View style={tw`flex-row justify-between px-5`}>
-        <Text style={regular}>Perron: {station.platform}</Text>
-        <View style={tw`flex w-1/5 flex-row justify-between`}>
-          <Text style={bold}>{depTime.toLocaleTimeString().slice(0, 5)}</Text>
-          <Text style={error}>
-            {station.delay > 0 ? `+${station.delay / 60}` : ""}
-          </Text>
-        </View>
-      </View>
+      <Text style={tw`text-white text-center font-bold text-[16px]`}>
+        Richting: {station.direction.name}
+      </Text>
+      <ArrDepDetails
+        type="Vertrek"
+        platform={station.platform}
+        time={depTime}
+        delay={station.delay}
+      />
     </View>
   );
 }
@@ -192,7 +201,8 @@ function ViaHeader(props) {
   const { station, stationName } = props;
   const depTime = new Date(0);
   depTime.setUTCSeconds(station.time);
-  console.log("via station", station);
+  const arrTime = new Date(0);
+  arrTime.setUTCSeconds(station.arrivaltime);
   return (
     <View>
       <View style={tw`flex flex-row justify-center px-3 items-center`}>
@@ -201,16 +211,27 @@ function ViaHeader(props) {
           {stationName}
         </Text>
       </View>
-      <View style={tw`flex flex-row justify-between items-center px-5`}>
-        <Text style={regular}>Perron: {station.platform}</Text>
-        <View style={tw`flex w-2/5 flex-row justify-between`}>
-          <Text style={bold}>
-            Vertrek: {depTime.toLocaleTimeString().slice(0, 5)},
-          </Text>
-          <Text style={error}>
-            {station.delay > 0 ? `+${station.delay / 60}` : ""}
-          </Text>
-        </View>
+      <Text style={tw`text-white text-center font-bold text-[16px]`}>
+        Richting: {station.direction.name}
+      </Text>
+      <ArrDepDetails
+        type="Vertrek"
+        platform={station.platform}
+        time={depTime}
+        delay={station.delay}
+      />
+    </View>
+  );
+}
+
+function ArrDepDetails({ type, platform, time, delay }) {
+  return (
+    <View style={tw`flex flex-row justify-between items-center px-5`}>
+      <Text style={regular}>Perron: {platform}</Text>
+      <View style={tw`flex flex-row`}>
+        <Text style={bold}>{type}: </Text>
+        <Text style={bold}>{time.toLocaleTimeString().slice(0, 5)} </Text>
+        <Text style={error}>{delay > 0 ? `+${delay / 60}` : ""}</Text>
       </View>
     </View>
   );
