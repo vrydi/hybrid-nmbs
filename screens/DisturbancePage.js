@@ -1,37 +1,26 @@
-import {
-  View,
-  Text,
-  Pressable,
-  FlatList,
-  ScrollView,
-  Linking,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, Pressable, Linking, FlatList } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   bold,
-  button,
-  collapsibleButton,
   collapsibleButtonContent,
   collapsibleButtonTitle,
   darkContainer,
   divider,
   flexBox,
-  flushTitle,
   fullContainer,
+  list,
   regular,
-  subTitle,
   title,
 } from "../data/styles";
 import { Icon } from "react-native-elements";
 import Collapsible from "react-native-collapsible";
 import { useDisturbanceContext } from "../contexts/DisturbancesContext";
-import { Divider } from "react-native-paper";
+import { Divider, List } from "react-native-paper";
 import tw from "twrnc";
 
 export default function DisturbancePage() {
-  const [distOpen, setDistOpen] = useState(true);
-  const [workOpen, setWorkOpen] = useState(true);
+  const [activeAccordion, setActiveAccordion] = useState("");
   const { workDisturbances, defectDisturbances, fetchDisturbances } =
     useDisturbanceContext();
 
@@ -39,70 +28,84 @@ export default function DisturbancePage() {
     fetchDisturbances();
   }, []);
 
-  const toggleDistOpen = () => {
-    setDistOpen(!distOpen);
-    setWorkOpen(true);
-  };
-  const toggleWorkOpen = () => {
-    setDistOpen(true);
-    setWorkOpen(!workOpen);
+  const toggleAccordion = (id) => {
+    if (activeAccordion === id) {
+      setActiveAccordion("");
+    } else {
+      setActiveAccordion(id);
+    }
   };
 
   return (
     <SafeAreaView style={fullContainer}>
       <Text style={title}>Storingen</Text>
-      <ScrollView>
-        <View style={darkContainer}>
-          <Pressable style={flexBox} onPress={() => toggleDistOpen()}>
-            <Icon name="warning" color="white" />
-            <Text style={collapsibleButtonTitle}>Storingen</Text>
+      <List.AccordionGroup
+        onAccordionPress={(id) => toggleAccordion(id)}
+        expandedId={activeAccordion}
+      >
+        <List.Accordion
+          id={"storingen"}
+          title="Storingen"
+          titleStyle={collapsibleButtonTitle}
+          style={darkContainer}
+          descriptionStyle={list}
+          left={() => <Icon name="warning" color="white" />}
+          right={() => (
             <Icon
-              name={distOpen ? "chevron-down" : "chevron-up"}
+              name={
+                activeAccordion === "storingen" ? "chevron-down" : "chevron-up"
+              }
+              color="white"
               type="ionicon"
-              color={"white"}
             />
-          </Pressable>
-          <Collapsible
-            collapsed={distOpen}
-            style={collapsibleButtonContent}
-            renderChildrenCollapsed={true}
-          >
-            <FlatList
-              data={defectDisturbances}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <DistListEl dist={item} />}
-              ItemSeparatorComponent={() => <Divider />}
-            />
-          </Collapsible>
-        </View>
-        <View style={darkContainer}>
-          <Pressable style={flexBox} onPress={() => toggleWorkOpen()}>
+          )}
+        >
+          <FlatList
+            data={defectDisturbances}
+            renderItem={({ item }) => <DistListEl dist={item} />}
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => <Divider style={divider} />}
+            ListEmptyComponent={() => (
+              <List.Item title="Geen Storingen" titleStyle={regular} />
+            )}
+          />
+        </List.Accordion>
+
+        <List.Accordion
+          id={"werken"}
+          title="Werken / geplande werken"
+          titleStyle={collapsibleButtonTitle}
+          style={darkContainer}
+          descriptionStyle={list}
+          left={() => (
             <Icon
-              name={"account-hard-hat"}
+              name="account-hard-hat"
+              color="white"
               type="material-community"
-              color={"white"}
             />
-            <Text style={collapsibleButtonTitle}>Werken / geplande werken</Text>
+          )}
+          right={() => (
             <Icon
-              name={workOpen ? "chevron-down" : "chevron-up"}
+              name={
+                activeAccordion === "werken" ? "chevron-down" : "chevron-up"
+              }
+              color="white"
               type="ionicon"
-              color={"white"}
             />
-          </Pressable>
-          <Collapsible
-            collapsed={workOpen}
-            style={collapsibleButtonContent}
-            renderChildrenCollapsed={true}
-          >
-            <FlatList
-              data={workDisturbances}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <DistListEl dist={item} />}
-              ItemSeparatorComponent={() => <View style={divider} />}
-            />
-          </Collapsible>
-        </View>
-      </ScrollView>
+          )}
+        >
+          <FlatList
+            data={workDisturbances}
+            renderItem={({ item }) => <DistListEl dist={item} />}
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => <Divider style={divider} />}
+            ListEmptyComponent={() => (
+              <List.Item title="Geen Werken" titleStyle={regular} />
+            )}
+            style={tw`px-0 w-full`}
+          />
+        </List.Accordion>
+      </List.AccordionGroup>
     </SafeAreaView>
   );
 }
@@ -113,7 +116,7 @@ function DistListEl(props) {
 
   const toggleOpen = () => setOpen(!open);
   return (
-    <View style={tw`px-5`}>
+    <View style={tw`px-5 `}>
       <Pressable style={flexBox} onPress={() => toggleOpen()}>
         <Text style={collapsibleButtonTitle}>{dist.title}</Text>
         <Icon
@@ -124,17 +127,11 @@ function DistListEl(props) {
       </Pressable>
       <Collapsible collapsed={open} style={collapsibleButtonContent}>
         <Text style={regular}>{dist.description}</Text>
-        <ScrollView>
-          {dist.descriptionLinks.descriptionLink.map((desc, i) => {
-            <Text
-              key={i}
-              style={bold}
-              onPress={() => Linking.openURL(desc.link)}
-            >
-              {desc.Text}
-            </Text>;
-          })}
-        </ScrollView>
+        {dist.descriptionLinks.descriptionLink.map((desc, i) => {
+          <Text key={i} style={bold} onPress={() => Linking.openURL(desc.link)}>
+            {desc.Text}
+          </Text>;
+        })}
       </Collapsible>
     </View>
   );
